@@ -5,10 +5,13 @@
     <div class="rounded-full" [class]="(selectedItemIndex > 0 && selectedItemIndex < discoverShows.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
     <div class="rounded-full" [class]="(selectedItemIndex === discoverShows.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
   </div>
-  <div scroll-left class="h-full w-1/4 absolute inset-y-0 left-0 bg-transparent" (click)="onClickScrollLeft()"></div>
-  <div scroll-left class="h-full w-1/4 absolute inset-y-0 right-0 bg-transparent" (click)="onClickScrollRight()"></div>
-
-  <div show-info class="absolute bottom-8 inset-x-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 h-fit w-5/12">
+  <div scroll-left class="scroll-area h-full w-1/6 absolute inset-y-0 left-0 bg-transparent flex justify-center items-center cursor-pointer" (click)="onClickScrollLeft()">
+    <span class="scroll-left-arrow material-symbols-outlined text-white">arrow_back_ios</span>
+  </div>
+  <div scroll-left class="scroll-area h-full w-1/6 absolute inset-y-0 right-0 bg-transparent flex justify-center items-center cursor-pointer" (click)="onClickScrollRight()">
+    <span class="scroll-right-arrow material-symbols-outlined text-white">arrow_forward_ios</span>
+  </div>
+  <div show-info class="absolute bottom-8 inset-x-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 h-fit w-5/12 cursor-pointer">
     <p class="text-white text-center text-5xl font-serif">{{ selectedItem?.original_name }}</p>
     <p class="text-white text-xl text-center font-serif line-clamp-2">{{ selectedItem?.overview }}</p>
   </div>

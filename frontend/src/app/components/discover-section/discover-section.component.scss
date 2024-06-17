@@ -1,8 +1,36 @@
+$icon-scale-on-hover: 1.5;
+$icon-scale-default: 1;
+
+@keyframes scaleUp {
+  from { transform: scale($icon-scale-default); }
+  to { transform: scale($icon-scale-on-hover); }
+}
+
+@keyframes scaleDown {
+  from { transform: scale($icon-scale-on-hover); }
+  to { transform: scale($icon-scale-default); }
+}
+
 :host {
   height: 80%;
 
   .main-poster {
     mask-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9),rgba(0, 0, 0, 0.9));
+  }
+
+  .scroll-area {
+
+    .scroll-left-arrow, .scroll-right-arrow {
+      transform: scale($icon-scale-default);
+      animation: scaleDown 150ms ease-out;
+    }
+
+    &:hover {
+      .scroll-left-arrow, .scroll-right-arrow {
+        transform: scale($icon-scale-on-hover);
+        animation: scaleUp 150ms ease-out;
+      }
+    }
   }
 
 }
