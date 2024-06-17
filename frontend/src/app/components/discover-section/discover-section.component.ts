@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { TMDB_API_KEY, TMDB_API_BASE_URL, TMDB_IMAGE_BASE_URL } from '../../constants';
 import { DiscoverTVEntry, DiscoverTVResponse } from '../../tmdb.models';
 import { lastValueFrom } from 'rxjs';
 import { clamp } from '../../utilities/utilities';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-discover-section',
@@ -14,6 +13,8 @@ import { Router } from '@angular/router';
   styleUrl: './discover-section.component.scss'
 })
 export class DiscoverSectionComponent {
+  /** Emitted when user clicks on the media info of any entry */
+  @Output('clickMediaEntry') onClickMediaEntryEvent: EventEmitter<number> = new EventEmitter<number>();
 
   protected discoverShows: DiscoverTVEntry[] = [];
 
@@ -21,7 +22,8 @@ export class DiscoverSectionComponent {
 
   protected selectedItem: DiscoverTVEntry | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+
+  constructor(private http: HttpClient) {}
 
 
   ngOnInit(): void {
@@ -58,6 +60,8 @@ export class DiscoverSectionComponent {
   }
 
   protected onClickMediaInfo(): void {
-    this.router.navigate(['/media-details']);
+    if (this.selectedItem != null) {
+      this.onClickMediaEntryEvent.emit(this.selectedItem.id);
+    }
   }
 }
