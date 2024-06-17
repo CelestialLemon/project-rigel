@@ -4,6 +4,7 @@ import { TMDB_API_KEY, TMDB_API_BASE_URL, TMDB_IMAGE_BASE_URL } from '../../cons
 import { DiscoverTVEntry, DiscoverTVResponse } from '../../tmdb.models';
 import { lastValueFrom } from 'rxjs';
 import { clamp } from '../../utilities/utilities';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-discover-section',
@@ -20,7 +21,7 @@ export class DiscoverSectionComponent {
 
   protected selectedItem: DiscoverTVEntry | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
 
   ngOnInit(): void {
@@ -54,5 +55,9 @@ export class DiscoverSectionComponent {
     if (this.selectedItem == null) return '';
     if (this.selectedItem.backdrop_path == null) return '';
     else return TMDB_IMAGE_BASE_URL + this.selectedItem.backdrop_path;
+  }
+
+  protected onClickMediaInfo(): void {
+    this.router.navigate(['/media-details']);
   }
 }

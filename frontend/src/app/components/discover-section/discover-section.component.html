@@ -11,7 +11,7 @@
   <div scroll-left class="scroll-area h-full w-1/6 absolute inset-y-0 right-0 bg-transparent flex justify-center items-center cursor-pointer" (click)="onClickScrollRight()">
     <span class="scroll-right-arrow material-symbols-outlined text-white">arrow_forward_ios</span>
   </div>
-  <div show-info class="absolute bottom-8 inset-x-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 h-fit w-5/12 cursor-pointer">
+  <div media-info class="absolute bottom-8 inset-x-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 h-fit w-5/12 cursor-pointer" (click)="onClickMediaInfo()">
     <p class="text-white text-center text-5xl font-serif">{{ selectedItem?.original_name }}</p>
     <p class="text-white text-xl text-center font-serif line-clamp-2">{{ selectedItem?.overview }}</p>
   </div>
