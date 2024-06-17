@@ -1,0 +1,15 @@
+<div class="relative flex w-full h-full">
+  <img main-poster class="main-poster w-full h-full object-cover" [src]="backdroImageUrl"/>
+  <div pagination class="absolute flex gap-2 items-center inset-x-2/4 bottom-2 h-fit w-fit -translate-x-1/2 -translate-y-1/2 bg-transparent">
+    <div class="rounded-full" [class]="(selectedItemIndex === 0 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
+    <div class="rounded-full" [class]="(selectedItemIndex > 0 && selectedItemIndex < discoverShows.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
+    <div class="rounded-full" [class]="(selectedItemIndex === discoverShows.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
+  </div>
+  <div scroll-left class="h-full w-1/4 absolute inset-y-0 left-0 bg-transparent" (click)="onClickScrollLeft()"></div>
+  <div scroll-left class="h-full w-1/4 absolute inset-y-0 right-0 bg-transparent" (click)="onClickScrollRight()"></div>
+
+  <div show-info class="absolute bottom-8 inset-x-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 h-fit w-5/12">
+    <p class="text-white text-center text-5xl font-serif">{{ selectedItem?.original_name }}</p>
+    <p class="text-white text-xl text-center font-serif line-clamp-2">{{ selectedItem?.overview }}</p>
+  </div>
+</div>
