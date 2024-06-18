@@ -1,3 +1,8 @@
-<div class="h-5/6 w-full p-24 box-border bg-yellow-400">
-
+<img class="banner-backdrop absolute w-full h-5/6 object-cover z-0" [src]="getBackdropUrl"/>
+<div class="relative h-5/6 w-full p-24 box-border flex gap-12 z-10">
+    <img class="min-w-1/4" [src]="getPosterUrl"/>
+    <div class="flex flex-col gap-8">
+      <p class="text-8xl text-white font-serif">{{ mediaDetails?.name ?? '' }}</p>
+      <p class="text-white text-xl font-serif line-clamp-5">{{ mediaDetails?.overview ?? '' }}</p>
+    </div>
 </div>
