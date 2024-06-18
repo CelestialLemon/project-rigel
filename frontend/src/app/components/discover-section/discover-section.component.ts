@@ -5,11 +5,12 @@ import { DiscoverTVEntry, DiscoverTVResponse } from '../../tmdb.models';
 import { lastValueFrom } from 'rxjs';
 import { clamp } from '../../utilities/utilities';
 import { TmdbService } from '../../tmdb.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-discover-section',
   standalone: true,
-  imports: [],
+  imports: [MatIconModule],
   providers: [TmdbService],
   templateUrl: './discover-section.component.html',
   styleUrl: './discover-section.component.scss'
