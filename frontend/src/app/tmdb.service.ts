@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DiscoverTVResponse, MediaDetailsResponse, MediaTVSeasonResponse } from './tmdb.models';
+import { DiscoverTVResponse, MediaDetailsResponse, MediaTVCreditsResponse, MediaTVSeasonResponse } from './tmdb.models';
 import { TMDB_API_BASE_URL, TMDB_API_KEY } from './constants';
 import { lastValueFrom } from 'rxjs';
 
@@ -40,6 +40,17 @@ export class TmdbService {
     });
 
     const res = await lastValueFrom(this.http.get<MediaTVSeasonResponse>(TMDB_API_BASE_URL + `/tv/${mediaId}/season/${seasonNumber}?language=en-US`, { headers }));
+
+    return res;
+  }
+
+  async getMediaTVCreditsDetails(mediaId: string) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${TMDB_API_KEY}`,
+      'accept': `application/json`
+    });
+
+    const res = await lastValueFrom(this.http.get<MediaTVCreditsResponse>(TMDB_API_BASE_URL + `/tv/${mediaId}/credits?language=en-US`, { headers }));
 
     return res;
   }

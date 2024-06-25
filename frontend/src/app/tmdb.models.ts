@@ -97,3 +97,36 @@ export interface MediaTVSeasonResponse {
   season_number: number,
   vote_average: number
 };
+
+export interface CastEntry {
+  adult: boolean,
+  gender: number,
+  id: number,
+  known_for_department: string,
+  name: string,
+  original_name: string,
+  popularity: number,
+  profile_path: string,
+  character: string,
+  credit_id: string,
+  order: number
+}
+
+export interface CrewEntry {
+  adult: boolean,
+  gender: number,
+  id: number,
+  known_for_department: string,
+  name: string,
+  original_name: string,
+  popularity: number,
+  profile_path: string | null,
+  credit_id: string,
+  department: string,
+  job: string
+}
+
+export interface MediaTVCreditsResponse {
+  cast: CastEntry[];
+  crew: CrewEntry[];
+}

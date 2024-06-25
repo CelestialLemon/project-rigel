@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MediaDetailsResponse, MediaTVSeasonResponse } from '../../tmdb.models';
+import { MediaDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -39,6 +39,7 @@ export class MediaDetailsComponent {
   protected mediaDetails: MediaDetailsResponse | null = null;
   protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
   protected activeSeasonNumber: number | null = null;
+  protected creditDetails: MediaTVCreditsResponse | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +56,8 @@ export class MediaDetailsComponent {
         this.activeSeasonDetails =
           await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
         this.activeSeasonNumber = this.activeSeasonDetails.season_number;
+        this.creditDetails = await this.tmdbService.getMediaTVCreditsDetails(this.mediaId);
+        console.log(this.creditDetails);
       }
     });
   }

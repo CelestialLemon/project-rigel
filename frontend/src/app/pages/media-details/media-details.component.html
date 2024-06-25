@@ -56,8 +56,23 @@
       </div>
     }
   </mat-tab>
-  <mat-tab label="Cast">
-    Cast will appear here
+  <mat-tab label="Cast & Crew">
+    <mat-tab-group dynamicHeight>
+      <mat-tab label="Cast">
+        @if(creditDetails != null) {
+          <div class="flex flex-row flex-wrap p-8 gap-4 justify-evenly">
+          @for (castEntry of creditDetails.cast; track castEntry.credit_id) {
+            <div class="flex flex-col w-60 bg-gray-800 p-2 gap-2 rounded-md">
+              <img class="rounded-md" [src]="TMDB_IMAGE_W500_BASE_URL + castEntry.profile_path" />
+              <p class="text-white m-0 text-center">{{ castEntry.name }}</p>
+              <p class="text-gray-400 m-0 text-center">{{ castEntry.known_for_department }} as {{ castEntry.character }}</p>
+            </div>
+          }
+          </div>
+        }
+      </mat-tab>
+      <mat-tab label="Crew">Crew</mat-tab>
+    </mat-tab-group>
   </mat-tab>
   <mat-tab label="Images">
     Images will appear here
