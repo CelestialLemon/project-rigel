@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TMDB_API_KEY, TMDB_API_BASE_URL, TMDB_IMAGE_BASE_URL } from '../../constants';
+import { TMDB_API_KEY, TMDB_API_BASE_URL, TMDB_IMAGE_ORIGINAL_BASE_URL } from '../../constants';
 import { DiscoverTVEntry, DiscoverTVResponse } from '../../tmdb.models';
 import { lastValueFrom } from 'rxjs';
 import { clamp } from '../../utilities/utilities';
@@ -47,7 +47,7 @@ export class DiscoverSectionComponent {
   protected get backdroImageUrl(): string {
     if (this.selectedItem == null) return '';
     if (this.selectedItem.backdrop_path == null) return '';
-    else return TMDB_IMAGE_BASE_URL + this.selectedItem.backdrop_path;
+    else return TMDB_IMAGE_ORIGINAL_BASE_URL + this.selectedItem.backdrop_path;
   }
 
   protected onClickMediaInfo(): void {

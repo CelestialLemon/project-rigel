@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MediaDetailsResponse } from '../../tmdb.models';
-import { TMDB_IMAGE_BASE_URL } from '../../constants';
+import { TMDB_IMAGE_ORIGINAL_BASE_URL, TMDB_IMAGE_W500_BASE_URL } from '../../constants';
 import { TmdbService } from '../../tmdb.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @Component({
   selector: 'app-media-details',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule],
   providers: [TmdbService],
   templateUrl: './media-details.component.html',
   styleUrl: './media-details.component.scss'
@@ -33,13 +34,13 @@ export class MediaDetailsComponent {
   protected get getPosterUrl(): string {
     if (this.mediaDetails == null) return '';
 
-    return TMDB_IMAGE_BASE_URL + this.mediaDetails.poster_path;
+    return TMDB_IMAGE_W500_BASE_URL + this.mediaDetails.poster_path;
   }
 
   protected get getBackdropUrl(): string {
     if (this.mediaDetails == null) return '';
 
-    return TMDB_IMAGE_BASE_URL + this.mediaDetails.backdrop_path;
+    return TMDB_IMAGE_ORIGINAL_BASE_URL + this.mediaDetails.backdrop_path;
   }
 
   protected get genres(): string[] {

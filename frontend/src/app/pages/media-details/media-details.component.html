@@ -1,10 +1,26 @@
 <img class="banner-backdrop absolute w-full max-w-full z-0" [src]="getBackdropUrl"/>
 <div class="h-5/6 w-full p-24 box-border flex gap-12 z-10">
     <img class="min-w-1/4 shadow-lg shadow-black" [src]="getPosterUrl"/>
-    <div class="flex flex-col gap-8">
-      <p class="text-8xl text-white roboto-regular">{{ mediaDetails?.name ?? '' }}</p>
-      <p class="text-white text-lg roboto-regular line-clamp-5">{{ mediaDetails?.overview ?? '' }}</p>
+    <div class="flex flex-col">
+      <h1 class="text-8xl text-white">{{ mediaDetails?.name ?? '' }}</h1>
+      <p class="text-white w-full line-clamp-5">{{ mediaDetails?.overview ?? '' }}</p>
 
+      <mat-chip-set class="mb-4" aria-label="media-genre">
+        @for(genre of genres; track genre) {
+          <mat-chip>{{ genre }}</mat-chip>
+        }
+      </mat-chip-set>
+
+      <div class="flex gap-4 mb-4">
+        <button mat-flat-button class="text-2xl">
+          <mat-icon>play_arrow</mat-icon>
+          Start Watching
+        </button>
+        <button mat-flat-button>
+          <mat-icon>add</mat-icon>
+          Add to Watch Later
+        </button>
+      </div>
     </div>
 </div>
 
