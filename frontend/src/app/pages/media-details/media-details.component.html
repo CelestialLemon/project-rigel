@@ -71,7 +71,19 @@
           </div>
         }
       </mat-tab>
-      <mat-tab label="Crew">Crew</mat-tab>
+      <mat-tab label="Crew">
+        @if (creditDetails != null) {
+          <div class="p-8 gap-4">
+            <mat-list>
+              @for(crewEntry of creditDetails.crew; track crewEntry.credit_id) {
+                <mat-list-item>
+                  {{ crewEntry.name }} ({{ crewEntry.job }})
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        }
+      </mat-tab>
     </mat-tab-group>
   </mat-tab>
   <mat-tab label="Images">

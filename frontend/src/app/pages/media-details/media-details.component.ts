@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -29,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatInputModule,
     FormsModule,
+    MatListModule
   ],
   providers: [TmdbService],
   templateUrl: './media-details.component.html',
