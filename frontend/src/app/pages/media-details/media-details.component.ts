@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MediaDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse } from '../../tmdb.models';
+import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -39,7 +39,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class MediaDetailsComponent {
   protected mediaId: string | null = null;
-  protected mediaDetails: MediaDetailsResponse | null = null;
+  protected mediaDetails: MediaTVDetailsResponse | null = null;
   protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
   protected activeSeasonNumber: number | null = null;
   protected creditDetails: MediaTVCreditsResponse | null = null;
