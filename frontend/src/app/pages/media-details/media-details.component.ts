@@ -87,17 +87,18 @@ export class MediaDetailsComponent {
       }
       else if (this.mediaType === MediaType.TV) {
         this.mediaTVDetails = await this.tmdbService.getMediaDetails(this.mediaId, this.mediaType) as MediaTVDetailsResponse;
+        this.activeSeasonDetails =
+        await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
+      this.activeSeasonNumber = this.activeSeasonDetails.season_number;
       }
       else {
         console.error("Un-supported media type");
       }
 
       this.creditDetails = await this.tmdbService.getMediaCreditsDetails(this.mediaId, this.mediaType);
-      // this.activeSeasonDetails =
-      //   await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
-      // this.activeSeasonNumber = this.activeSeasonDetails.season_number;
-      // this.imagesDetails = await this.tmdbService.getMediaTVImagesDetails(this.mediaId);
-      // this.videosDetails = await this.tmdbService.getMediaTVVideosDetails(this.mediaId);
+      this.imagesDetails = await this.tmdbService.getMediaImagesDetails(this.mediaId, this.mediaType);
+      this.videosDetails = await this.tmdbService.getMediaVideosDetails(this.mediaId, this.mediaType);
+
     }
   }
 

@@ -59,24 +59,24 @@ export class TmdbService {
     return res;
   }
 
-  async getMediaTVImagesDetails(mediaId: string) {
+  async getMediaImagesDetails(mediaId: string, mediaType: MediaType) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${TMDB_API_KEY}`,
       'accept': `application/json`
     });
 
-    const res = await lastValueFrom(this.http.get<MediaTVImagesResponse>(TMDB_API_BASE_URL + `/tv/${mediaId}/images`, { headers }));
+    const res = await lastValueFrom(this.http.get<MediaTVImagesResponse>(TMDB_API_BASE_URL + `/${mediaType}/${mediaId}/images`, { headers }));
 
     return res;
   }
 
-  async getMediaTVVideosDetails(mediaId: string) {
+  async getMediaVideosDetails(mediaId: string, mediaType: MediaType) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${TMDB_API_KEY}`,
       'accept': `application/json`
     });
 
-    const res = await lastValueFrom(this.http.get<MediaTVVideosResponse>(TMDB_API_BASE_URL + `/tv/${mediaId}/videos`, { headers }));
+    const res = await lastValueFrom(this.http.get<MediaTVVideosResponse>(TMDB_API_BASE_URL + `/${mediaType}/${mediaId}/videos`, { headers }));
 
     return res;
   }
