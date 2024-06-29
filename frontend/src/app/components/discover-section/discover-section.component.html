@@ -1,9 +1,9 @@
 <div class="relative flex w-full h-full">
-  <img main-poster class="main-poster w-full h-full object-cover" [src]="backdroImageUrl"/>
+  <img main-poster class="main-poster w-full h-full object-cover" [src]="backdropUrl"/>
   <div pagination class="absolute flex gap-2 items-center inset-x-2/4 bottom-2 h-fit w-fit -translate-x-1/2 -translate-y-1/2 bg-transparent">
     <div class="rounded-full" [class]="(selectedItemIndex === 0 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
-    <div class="rounded-full" [class]="(selectedItemIndex > 0 && selectedItemIndex < discoverShows.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
-    <div class="rounded-full" [class]="(selectedItemIndex === discoverShows.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
+    <div class="rounded-full" [class]="(selectedItemIndex > 0 && selectedItemIndex < discoverItems.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
+    <div class="rounded-full" [class]="(selectedItemIndex === discoverItems.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
   </div>
   <div scroll-left class="scroll-area h-full w-1/6 absolute inset-y-0 left-0 bg-transparent flex justify-center items-center cursor-pointer" (click)="onClickScrollLeft()">
     <mat-icon class="scroll-left-arrow text-white">arrow_back_ios</mat-icon>
@@ -12,7 +12,7 @@
     <mat-icon class="scroll-right-arrow text-white">arrow_forward_ios</mat-icon>
   </div>
   <div media-info class="absolute bottom-8 inset-x-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 h-fit w-5/12 cursor-pointer" (click)="onClickMediaInfo()">
-    <p class="text-white text-center text-5xl font-serif">{{ selectedItem?.original_name }}</p>
-    <p class="text-white text-xl text-center font-serif line-clamp-2">{{ selectedItem?.overview }}</p>
+    <p class="text-white text-center text-5xl font-serif">{{ mediaTitle }}</p>
+    <p class="text-white text-xl text-center font-serif line-clamp-2">{{ mediaOverview }}</p>
   </div>
 </div>

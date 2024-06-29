@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DiscoverTVResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse } from './tmdb.models';
+import { DiscoverTVResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse, DiscoverMVResponse } from './tmdb.models';
 import { TMDB_API_BASE_URL, TMDB_API_KEY } from './constants';
 import { lastValueFrom } from 'rxjs';
 import { MediaType } from './pages/media-details/media-details.component';
@@ -12,13 +12,13 @@ export class TmdbService {
 
   constructor(private http: HttpClient) {}
 
-  async getDiscoverShows() {
+  async getDiscoverMedia(mediaType: MediaType) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${TMDB_API_KEY}`,
       'accept' : 'application/json'
     });
 
-    const res = await lastValueFrom(this.http.get<DiscoverTVResponse>(TMDB_API_BASE_URL + '/discover/tv?include_adult=true&include_null_first_air_dates=true&page=1&sort_by=popularity.desc&with_genres=10765', { headers }));
+    const res = await lastValueFrom(this.http.get<DiscoverTVResponse | DiscoverMVResponse>(TMDB_API_BASE_URL + `/discover/${mediaType}?include_adult=true&include_null_first_air_dates=true&page=1&sort_by=popularity.desc`, { headers }));
 
     return res.results;
   }
