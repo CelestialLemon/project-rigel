@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-root',
@@ -13,19 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
     RouterLink,
     RouterLinkActive,
     HomeComponent,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
+    ToolbarComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  constructor(private router: Router) {}
-
-
-  protected onClickTitle(): void {
-    console.log("clicked on title");
-    this.router.navigate(['/']);
-  }
 }
