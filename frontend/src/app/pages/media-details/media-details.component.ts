@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse } from '../../tmdb.models';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -17,6 +17,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+export enum MediaType {
+  MOVIE = 'movie',
+  TV = 'tv'
+};
 
 @Component({
   selector: 'app-media-details',
@@ -39,12 +44,16 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class MediaDetailsComponent {
   protected mediaId: string | null = null;
-  protected mediaDetails: MediaTVDetailsResponse | null = null;
+  protected mediaType: MediaType | null = null;
+
+  protected mediaTVDetails: MediaTVDetailsResponse | null = null;
   protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
   protected activeSeasonNumber: number | null = null;
   protected creditDetails: MediaTVCreditsResponse | null = null;
   protected imagesDetails: MediaTVImagesResponse | null = null;
   protected videosDetails: MediaTVVideosResponse | null = null;
+
+  protected mediaMVDetails: MediaMVDetailsResponse | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,21 +62,41 @@ export class MediaDetailsComponent {
   ) {}
 
   ngOnInit() {
-    this.route.queryParamMap.subscribe(async (params) => {
-      this.mediaId = params.get('id');
-      if (this.mediaId != null) {
-        this.mediaDetails = await this.tmdbService.getMediaDetails(
-          this.mediaId
-        );
-        this.activeSeasonDetails =
-          await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
-        this.activeSeasonNumber = this.activeSeasonDetails.season_number;
-        this.creditDetails = await this.tmdbService.getMediaTVCreditsDetails(this.mediaId);
-        this.imagesDetails = await this.tmdbService.getMediaTVImagesDetails(this.mediaId);
-        this.videosDetails = await this.tmdbService.getMediaTVVideosDetails(this.mediaId);
-        console.log(this.videosDetails);
-      }
+    this.route.queryParamMap.subscribe((params) => {
+      this.handleParamsUpdate(params);
     });
+  }
+
+  // component functions
+
+  private async handleParamsUpdate(params: ParamMap) {
+    // get media type and condense to type
+    const mediaType = params.get('type');
+    if (mediaType != null && Object.values(MediaType).includes(mediaType as MediaType)) {
+      this.mediaType = mediaType as MediaType;
+    }
+
+    // get media id
+    this.mediaId = params.get('id');
+
+    // if both params are present fetch the media details
+    if (this.mediaId != null && this.mediaType != null) {
+      if (this.mediaType === MediaType.MOVIE) {
+        this.mediaMVDetails = await this.tmdbService.getMediaDetails(this.mediaId, this.mediaType) as MediaMVDetailsResponse;
+      }
+      else if (this.mediaType === MediaType.TV) {
+        this.mediaTVDetails = await this.tmdbService.getMediaDetails(this.mediaId, this.mediaType) as MediaTVDetailsResponse;
+      }
+      else {
+        console.error("Un-supported media type");
+      }
+      // this.activeSeasonDetails =
+      //   await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
+      // this.activeSeasonNumber = this.activeSeasonDetails.season_number;
+      // this.creditDetails = await this.tmdbService.getMediaTVCreditsDetails(this.mediaId);
+      // this.imagesDetails = await this.tmdbService.getMediaTVImagesDetails(this.mediaId);
+      // this.videosDetails = await this.tmdbService.getMediaTVVideosDetails(this.mediaId);
+    }
   }
 
   // event function
@@ -80,24 +109,94 @@ export class MediaDetailsComponent {
 
   // template get functions
 
-  protected get getPosterUrl(): string {
-    if (this.mediaDetails == null) return '';
+  protected get mediaTitle(): string {
 
-    return TMDB_IMAGE_W500_BASE_URL + this.mediaDetails.poster_path;
+    switch(this.mediaType) {
+      case MediaType.MOVIE:
+        return this.mediaMVDetails?.title ?? '';
+
+      case MediaType.TV:
+        return this.mediaTVDetails?.name ?? '';
+
+      default:
+        return ''
+    };
+
   }
 
-  protected get getBackdropUrl(): string {
-    if (this.mediaDetails == null) return '';
+  protected get mediaOverview(): string {
 
-    return TMDB_IMAGE_ORIGINAL_BASE_URL + this.mediaDetails.backdrop_path;
+    switch(this.mediaType) {
+      case MediaType.MOVIE:
+        return this.mediaMVDetails?.overview ?? '';
+
+      case MediaType.TV:
+        return this.mediaTVDetails?.overview ?? '';
+      default:
+        return ''
+    };
   }
 
-  protected get  TMDB_IMAGE_W500_BASE_URL(): string {
-    return TMDB_IMAGE_W500_BASE_URL;
+  protected get mediaGenres(): string[] {
+    let genres: MediaGenre[] = [];
+
+    switch(this.mediaType) {
+      case MediaType.MOVIE:
+        genres = this.mediaMVDetails?.genres ?? [];
+        break
+
+      case MediaType.TV:
+        genres = this.mediaTVDetails?.genres ?? [];
+        break
+
+      default:
+        genres = [];
+        break
+    };
+
+    return genres.map(genre => genre.name);
   }
 
-  protected get  TMDB_IMAGE_ORIGINAL_BASE_URL(): string {
-    return TMDB_IMAGE_ORIGINAL_BASE_URL;
+  protected get posterUrl(): string {
+
+    let poster_path = '';
+
+    switch(this.mediaType) {
+      case MediaType.MOVIE:
+        poster_path = this.mediaMVDetails?.poster_path ?? '';
+        break;
+
+      case MediaType.TV:
+        poster_path = this.mediaTVDetails?.poster_path ?? '';
+        break;
+
+      default:
+        poster_path = '';
+        break;
+    };
+
+    return TMDB_IMAGE_W500_BASE_URL + poster_path;
+  }
+
+  protected get backdropUrl(): string {
+
+    let backdrop_path = '';
+
+    switch(this.mediaType) {
+      case MediaType.MOVIE:
+        backdrop_path = this.mediaMVDetails?.backdrop_path ?? '';
+        break;
+
+      case MediaType.TV:
+        backdrop_path = this.mediaTVDetails?.backdrop_path ?? '';
+        break;
+
+      default:
+        backdrop_path = '';
+        break;
+    };
+
+    return TMDB_IMAGE_ORIGINAL_BASE_URL + backdrop_path;
   }
 
   protected get getActiveSeasonPoster(): string {
@@ -108,11 +207,5 @@ export class MediaDetailsComponent {
 
   protected getSanitizedUrl(inputUrl: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(inputUrl);
-  }
-
-  protected get genres(): string[] {
-    if (this.mediaDetails == null) return [];
-
-    return this.mediaDetails.genres.map((genreEntry) => genreEntry.name);
   }
 }

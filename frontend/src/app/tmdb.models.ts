@@ -22,7 +22,7 @@ export interface DiscoverTVEntry {
   vote_count: number;
 }
 
-interface MediaGenre {
+export interface MediaGenre {
   id: number;
   name: string;
 }
