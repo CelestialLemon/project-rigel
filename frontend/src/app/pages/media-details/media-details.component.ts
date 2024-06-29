@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre } from '../../tmdb.models';
+import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -49,7 +49,8 @@ export class MediaDetailsComponent {
   protected mediaTVDetails: MediaTVDetailsResponse | null = null;
   protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
   protected activeSeasonNumber: number | null = null;
-  protected creditDetails: MediaTVCreditsResponse | null = null;
+
+  protected creditDetails: MediaCreditsResponse | null = null;
   protected imagesDetails: MediaTVImagesResponse | null = null;
   protected videosDetails: MediaTVVideosResponse | null = null;
 
@@ -90,10 +91,11 @@ export class MediaDetailsComponent {
       else {
         console.error("Un-supported media type");
       }
+
+      this.creditDetails = await this.tmdbService.getMediaCreditsDetails(this.mediaId, this.mediaType);
       // this.activeSeasonDetails =
       //   await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
       // this.activeSeasonNumber = this.activeSeasonDetails.season_number;
-      // this.creditDetails = await this.tmdbService.getMediaTVCreditsDetails(this.mediaId);
       // this.imagesDetails = await this.tmdbService.getMediaTVImagesDetails(this.mediaId);
       // this.videosDetails = await this.tmdbService.getMediaTVVideosDetails(this.mediaId);
     }
@@ -197,6 +199,14 @@ export class MediaDetailsComponent {
     };
 
     return TMDB_IMAGE_ORIGINAL_BASE_URL + backdrop_path;
+  }
+
+  protected get TMDB_IMAGE_ORIGINAL_BASE_URL(): string {
+    return TMDB_IMAGE_ORIGINAL_BASE_URL;
+  }
+
+  protected get TMDB_IMAGE_W500_BASE_URL(): string {
+    return TMDB_IMAGE_W500_BASE_URL;
   }
 
   protected get getActiveSeasonPoster(): string {
