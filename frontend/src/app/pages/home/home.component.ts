@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DiscoverSectionComponent } from '../../components/discover-section/discover-section.component';
+import { DiscoverItem, DiscoverSectionComponent } from '../../components/discover-section/discover-section.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   constructor(private router: Router) {}
 
-  protected onClickMediaEntry(mediaId: number): void {
-    this.router.navigate(['/media-details'], {  queryParams: { 'id': mediaId }});
+  protected onClickMediaEntry(item: DiscoverItem): void {
+    this.router.navigate(['/media-details'], {  queryParams: { 'id': item.mediaId, 'type': item.type }});
   }
 }

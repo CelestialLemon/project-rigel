@@ -8,6 +8,14 @@ import { TmdbService } from '../../tmdb.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MediaType } from '../../pages/media-details/media-details.component';
 
+export interface DiscoverItem {
+  title: string;
+  overview: string;
+  backdrop_path: string | null;
+  type: MediaType;
+  mediaId: number;
+}
+
 @Component({
   selector: 'app-discover-section',
   standalone: true,
@@ -18,16 +26,16 @@ import { MediaType } from '../../pages/media-details/media-details.component';
 })
 export class DiscoverSectionComponent {
   /** Emitted when user clicks on the media info of any entry */
-  @Output('clickMediaEntry') onClickMediaEntryEvent: EventEmitter<number> = new EventEmitter<number>();
+  @Output('clickMediaEntry') clickOnDiscoverItem: EventEmitter<DiscoverItem> = new EventEmitter<DiscoverItem>();
 
   protected discoverTV: DiscoverTVEntry[] = [];
   protected discoverMV: DiscoverMVEntry[] = [];
 
-  protected discoverItems: (DiscoverTVEntry | DiscoverMVEntry)[] = [];
+  protected discoverItems: (DiscoverItem)[] = [];
 
   protected selectedItemIndex: number = 0;
 
-  protected selectedItem: DiscoverMVEntry | DiscoverTVEntry | null = null;
+  protected selectedItem: DiscoverItem | null = null;
 
 
   constructor(private tmdbService: TmdbService) {}
@@ -38,8 +46,24 @@ export class DiscoverSectionComponent {
     this.discoverMV = await this.tmdbService.getDiscoverMedia(MediaType.MOVIE) as DiscoverMVEntry[];
 
     this.discoverItems = this.discoverItems
-      .concat(this.discoverTV.slice(0, 5))
-      .concat(this.discoverMV.slice(0, 5));
+      .concat(this.discoverTV.slice(0, 5).map((tvItem): DiscoverItem => { return {
+        title: tvItem.name,
+        overview: tvItem.overview,
+        backdrop_path: tvItem.backdrop_path,
+        type: MediaType.TV,
+        mediaId: tvItem.id
+      }
+    }
+    ))
+      .concat(this.discoverMV.slice(0, 5).map((mvItem): DiscoverItem => {
+        return {
+          title: mvItem.title,
+          overview: mvItem.overview,
+          backdrop_path: mvItem.backdrop_path,
+          type: MediaType.MOVIE,
+          mediaId: mvItem.id
+        }
+      }));
 
     this.selectedItem = this.discoverItems[this.selectedItemIndex];
   }
@@ -56,25 +80,6 @@ export class DiscoverSectionComponent {
 
   // template get functions
 
-  protected get mediaTitle(): string {
-    if (this.selectedItem == null) return '';
-
-    if ('name' in this.selectedItem) {
-      return this.selectedItem.name;
-    }
-    if ('title' in this.selectedItem) {
-      return this.selectedItem.title;
-    }
-
-    return '';
-  }
-
-  protected get mediaOverview(): string {
-    if (this.selectedItem == null) return '';
-
-    return this.selectedItem.overview;
-  }
-
   protected get backdropUrl(): string {
     if (this.selectedItem == null) return '';
     if (this.selectedItem.backdrop_path == null) return '';
@@ -84,7 +89,7 @@ export class DiscoverSectionComponent {
 
   protected onClickMediaInfo(): void {
     if (this.selectedItem != null) {
-      this.onClickMediaEntryEvent.emit(this.selectedItem.id);
+      this.clickOnDiscoverItem.emit(this.selectedItem);
     }
   }
 }
