@@ -147,3 +147,21 @@ export interface MediaTVImagesResponse {
   posters: MediaTVImage[];
   id: number;
 }
+
+export interface MediaTVVideo {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: string;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+
+export interface MediaTVVideosResponse {
+  id: number;
+  results: MediaTVVideo[];
+}

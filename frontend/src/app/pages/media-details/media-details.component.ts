@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MediaDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse } from '../../tmdb.models';
+import { MediaDetailsResponse, MediaTVSeasonResponse, MediaTVCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-media-details',
@@ -43,10 +44,12 @@ export class MediaDetailsComponent {
   protected activeSeasonNumber: number | null = null;
   protected creditDetails: MediaTVCreditsResponse | null = null;
   protected imagesDetails: MediaTVImagesResponse | null = null;
+  protected videosDetails: MediaTVVideosResponse | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private tmdbService: TmdbService
+    private tmdbService: TmdbService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -61,7 +64,8 @@ export class MediaDetailsComponent {
         this.activeSeasonNumber = this.activeSeasonDetails.season_number;
         this.creditDetails = await this.tmdbService.getMediaTVCreditsDetails(this.mediaId);
         this.imagesDetails = await this.tmdbService.getMediaTVImagesDetails(this.mediaId);
-        console.log(this.imagesDetails);
+        this.videosDetails = await this.tmdbService.getMediaTVVideosDetails(this.mediaId);
+        console.log(this.videosDetails);
       }
     });
   }
@@ -100,6 +104,10 @@ export class MediaDetailsComponent {
     if (this.activeSeasonDetails == null) return '';
 
     return TMDB_IMAGE_ORIGINAL_BASE_URL + this.activeSeasonDetails.poster_path;
+  }
+
+  protected getSanitizedUrl(inputUrl: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(inputUrl);
   }
 
   protected get genres(): string[] {

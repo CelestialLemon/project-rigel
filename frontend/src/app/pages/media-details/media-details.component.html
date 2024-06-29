@@ -118,7 +118,15 @@
     </mat-tab-group>
   </mat-tab>
   <mat-tab label="Videos">
-    Videos will appear here
+    @if (videosDetails != null) {
+      <div class="videos-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border">
+        @for (video of videosDetails.results; track video.key) {
+            @if (video.site === 'YouTube') {
+              <iframe width="560" height="315" [src]="getSanitizedUrl('https://www.youtube.com/embed/' + video.key)" frameborder="0" allowfullscreen></iframe>
+            }
+        }
+        </div>
+    }
   </mat-tab>
 </mat-tab-group>
 
