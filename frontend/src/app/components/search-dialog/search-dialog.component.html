@@ -1,4 +1,20 @@
 <ng-container #vcr></ng-container>
 <ng-template #searchDialogTemplate>
-  This works!
+  <div class="w-[40rem] h-[32rem] bg-gray-800 rounded-md p-4 flex flex-col">
+    <mat-form-field class="search-field w-full">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="searchValue" />
+
+      @if (searchValue != '') {
+        <button mat-icon-button matSuffix (click)="searchValue=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <mat-chip-listbox [multiple]="true">
+      <mat-chip-option selected="true">Movies</mat-chip-option>
+      <mat-chip-option selected="true">TV</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
 </ng-template>

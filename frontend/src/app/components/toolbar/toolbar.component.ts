@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,11 +34,18 @@ export class ToolbarComponent {
   }
 
   protected onClickSearchButton(): void {
-    if (this.searchDialog.isOpen) {
-      this.searchDialog.close();
+    if (!this.searchDialog.isOpen) {
+      this.searchDialog.open();
     }
     else {
-      this.searchDialog.open();
+      this.searchDialog.close();
+    }
+  }
+
+  @HostListener('keydown.escape')
+  onClickEscape(): void {
+    if (this.searchDialog.isOpen) {
+      this.searchDialog.close();
     }
   }
 }

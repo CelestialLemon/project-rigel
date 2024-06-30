@@ -1,15 +1,32 @@
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Component, ElementRef, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
+import { Subject, takeUntil } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-search-dialog',
   standalone: true,
-  imports: [OverlayModule],
+  imports: [
+    OverlayModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './search-dialog.component.html',
   styleUrl: './search-dialog.component.scss'
 })
 export class SearchDialogComponent {
+
+  protected searchValue: string = '';
 
   public get isOpen(): boolean {
     return this._isOpen;
@@ -23,10 +40,13 @@ export class SearchDialogComponent {
   private overlayRef: OverlayRef | null = null;
   private templatePortal: TemplatePortal | null = null;
   private _isOpen: boolean = false;
+  private destroy$: Subject<void> = new Subject<void>;
 
   // angular lifecycle functions
   ngOnDestroy(): void {
     this.overlayRef?.dispose();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // public functions
