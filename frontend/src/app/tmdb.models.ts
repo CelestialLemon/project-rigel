@@ -1,20 +1,31 @@
-export interface DiscoverTVResponse {
+import { MediaType } from "./pages/media-details/media-details.component";
+
+// custom interface that condenses mv entry and tv entry into one
+export interface SearchEntry {
+  title: string;
+  overview: string;
+  backdrop_path: string | null;
+  type: MediaType;
+  mediaId: number;
+}
+
+export interface TVSearchResponse {
   page: number;
-  results: DiscoverTVEntry[];
+  results: TVEntry[];
   total_pages: number;
   total_results: number;
 }
 
-export interface DiscoverMVResponse {
+export interface MVSearchResponse {
   page: number;
-  results: DiscoverMVEntry[];
+  results: MVEntry[];
   total_pages: number;
   total_results: number;
 }
 
-export interface DiscoverMVEntry {
+export interface MVEntry {
   adult: boolean;
-  backdrop_path: string;
+  backdrop_path: string | null;
   genre_ids: number[];
   id: number;
   original_language: string;
@@ -29,7 +40,7 @@ export interface DiscoverMVEntry {
   vote_count: number;
 };
 
-export interface DiscoverTVEntry {
+export interface TVEntry {
   adult: boolean;
   backdrop_path: string | null;
   first_air_date: string;

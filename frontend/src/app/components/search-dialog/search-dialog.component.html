@@ -3,18 +3,29 @@
   <div class="w-[40rem] h-[32rem] bg-gray-800 rounded-md p-4 flex flex-col">
     <mat-form-field class="search-field w-full">
       <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="searchValue" />
+      <input matInput [ngModel]="searchValue()" (ngModelChange)="onSearchInputChange($event)" />
 
-      @if (searchValue != '') {
-        <button mat-icon-button matSuffix (click)="searchValue=''">
+      @if (searchValue() != '') {
+        <button mat-icon-button matSuffix (click)="onSearchInputChange('')">
           <mat-icon>close</mat-icon>
         </button>
       }
     </mat-form-field>
 
-    <mat-chip-listbox [multiple]="true">
-      <mat-chip-option selected="true">Movies</mat-chip-option>
-      <mat-chip-option selected="true">TV</mat-chip-option>
-    </mat-chip-listbox>
+    <mat-radio-group (change)="onChangeMediaType($event.value)">
+      <mat-radio-button [checked]="true" value="movie">Movies</mat-radio-button>
+      <mat-radio-button value="tv">TV</mat-radio-button>
+    </mat-radio-group>
+
+    <div class="search-results flex-1 flex flex-col gap-4 w-full overflow-y-auto">
+      @for (searchEntry of searchEntries(); track searchEntry.mediaId) {
+        <div class="w-full p-4 rounded-md flex gap-4 bg-gray-700">
+          <img class="w-10" [src]="TMDB_IMAGE_W500_BASE_URL + searchEntry.backdrop_path"/>
+          <div class="flex flex-col gap-4">
+            <h3 class="text-white">{{ searchEntry.title }}</h3>
+          </div>
+        </div>
+      }
+    </div>
   </div>
 </ng-template>

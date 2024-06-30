@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { DiscoverItem, DiscoverSectionComponent } from '../../components/discover-section/discover-section.component';
+import { DiscoverSectionComponent } from '../../components/discover-section/discover-section.component';
 import { Router } from '@angular/router';
+import { SearchEntry } from '../../tmdb.models';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   constructor(private router: Router) {}
 
-  protected onClickMediaEntry(item: DiscoverItem): void {
+  protected onClickMediaEntry(item: SearchEntry): void {
     this.router.navigate(['/media-details'], {  queryParams: { 'id': item.mediaId, 'type': item.type }});
   }
 }

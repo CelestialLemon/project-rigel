@@ -6,23 +6,16 @@ import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
 } from '../../constants';
 import {
-  DiscoverMVEntry,
-  DiscoverTVEntry,
-  DiscoverTVResponse,
+  MVEntry,
+  SearchEntry,
+  TVEntry,
+  TVSearchResponse,
 } from '../../tmdb.models';
 import { lastValueFrom } from 'rxjs';
 import { clamp } from '../../utilities/utilities';
 import { TmdbService } from '../../tmdb.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MediaType } from '../../pages/media-details/media-details.component';
-
-export interface DiscoverItem {
-  title: string;
-  overview: string;
-  backdrop_path: string | null;
-  type: MediaType;
-  mediaId: number;
-}
 
 @Component({
   selector: 'app-discover-section',
@@ -34,31 +27,31 @@ export interface DiscoverItem {
 })
 export class DiscoverSectionComponent {
   /** Emitted when user clicks on the media info of any entry */
-  @Output('clickMediaEntry') clickOnDiscoverItem: EventEmitter<DiscoverItem> =
-    new EventEmitter<DiscoverItem>();
+  @Output('clickMediaEntry') clickOnSearchEntry: EventEmitter<SearchEntry> =
+    new EventEmitter<SearchEntry>();
 
-  protected discoverTV: DiscoverTVEntry[] = [];
-  protected discoverMV: DiscoverMVEntry[] = [];
+  protected discoverTV: TVEntry[] = [];
+  protected discoverMV: MVEntry[] = [];
 
-  protected discoverItems: DiscoverItem[] = [];
+  protected discoverItems: SearchEntry[] = [];
 
   protected selectedItemIndex: number = 0;
 
-  protected selectedItem: DiscoverItem | null = null;
+  protected selectedItem: SearchEntry | null = null;
 
   constructor(private tmdbService: TmdbService) {}
 
   async ngOnInit() {
     this.discoverTV = (await this.tmdbService.getDiscoverMedia(
       MediaType.TV
-    )) as DiscoverTVEntry[];
+    )) as TVEntry[];
     this.discoverMV = (await this.tmdbService.getDiscoverMedia(
       MediaType.MOVIE
-    )) as DiscoverMVEntry[];
+    )) as MVEntry[];
 
     this.discoverItems = this.discoverItems
       .concat(
-        this.discoverTV.slice(0, 5).map((tvItem): DiscoverItem => {
+        this.discoverTV.slice(0, 5).map((tvItem): SearchEntry => {
           return {
             title: tvItem.name,
             overview: tvItem.overview,
@@ -69,7 +62,7 @@ export class DiscoverSectionComponent {
         })
       )
       .concat(
-        this.discoverMV.slice(0, 5).map((mvItem): DiscoverItem => {
+        this.discoverMV.slice(0, 5).map((mvItem): SearchEntry => {
           return {
             title: mvItem.title,
             overview: mvItem.overview,
@@ -111,7 +104,7 @@ export class DiscoverSectionComponent {
 
   protected onClickMediaInfo(): void {
     if (this.selectedItem != null) {
-      this.clickOnDiscoverItem.emit(this.selectedItem);
+      this.clickOnSearchEntry.emit(this.selectedItem);
     }
   }
 }

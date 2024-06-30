@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DiscoverTVResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse, DiscoverMVResponse } from './tmdb.models';
+import { TVSearchResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MVSearchResponse } from './tmdb.models';
 import { TMDB_API_BASE_URL, TMDB_API_KEY } from './constants';
 import { lastValueFrom } from 'rxjs';
 import { MediaType } from './pages/media-details/media-details.component';
@@ -18,7 +18,7 @@ export class TmdbService {
       'accept' : 'application/json'
     });
 
-    const res = await lastValueFrom(this.http.get<DiscoverTVResponse | DiscoverMVResponse>(TMDB_API_BASE_URL + `/discover/${mediaType}?include_adult=true&include_null_first_air_dates=true&page=1&sort_by=popularity.desc`, { headers }));
+    const res = await lastValueFrom(this.http.get<TVSearchResponse | MVSearchResponse>(TMDB_API_BASE_URL + `/discover/${mediaType}?include_adult=true&include_null_first_air_dates=true&page=1&sort_by=popularity.desc`, { headers }));
 
     return res.results;
   }
@@ -79,5 +79,25 @@ export class TmdbService {
     const res = await lastValueFrom(this.http.get<MediaTVVideosResponse>(TMDB_API_BASE_URL + `/${mediaType}/${mediaId}/videos`, { headers }));
 
     return res;
+  }
+
+  async searchMedia(query: string, mediaType: MediaType) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${TMDB_API_KEY}`,
+      'accept': `application/json`
+    });
+
+    const baseParams = new HttpParams();
+
+    const res = await lastValueFrom(
+      this.http.get<TVSearchResponse | MVSearchResponse>
+      (
+        TMDB_API_BASE_URL + `/search/${mediaType}`, {
+        headers,
+        params: baseParams.set('query', query)
+        }
+      ));
+
+    return res.results;
   }
 }
