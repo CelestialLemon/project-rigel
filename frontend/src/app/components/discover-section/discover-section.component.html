@@ -1,5 +1,5 @@
 <div class="relative flex w-full h-full">
-  <img main-poster class="main-poster w-full h-full object-cover" [src]="backdropUrl"/>
+  <img main-poster class="main-poster w-full h-full object-cover" [src]="backdropUrl" loading="lazy"/>
   <div pagination class="absolute flex gap-2 items-center inset-x-2/4 bottom-2 h-fit w-fit -translate-x-1/2 -translate-y-1/2 bg-transparent">
     <div class="rounded-full" [class]="(selectedItemIndex === 0 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
     <div class="rounded-full" [class]="(selectedItemIndex > 0 && selectedItemIndex < discoverItems.length - 1 ? 'w-4 h-4 bg-slate-100' : 'w-2 h-2 bg-slate-900')"></div>
