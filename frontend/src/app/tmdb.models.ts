@@ -236,3 +236,7 @@ export interface MediaTVVideosResponse {
   id: number;
   results: MediaTVVideo[];
 }
+
+export interface GenreResponse {
+  genres: MediaGenre[];
+}

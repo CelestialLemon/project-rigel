@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TVSearchResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MVSearchResponse } from './tmdb.models';
+import { TVSearchResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MVSearchResponse, GenreResponse } from './tmdb.models';
 import { TMDB_API_BASE_URL, TMDB_API_KEY } from './constants';
 import { lastValueFrom } from 'rxjs';
 import { MediaType } from './pages/media-details/media-details.component';
@@ -101,5 +101,20 @@ export class TmdbService {
     return res.results;
   }
 
-  // async getGenres(mediaType)
+  async getGenres(mediaType: MediaType) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${TMDB_API_KEY}`,
+      'accept': `application/json`
+    });
+
+    const res = await lastValueFrom(
+      this.http.get<GenreResponse>
+      (
+        TMDB_API_BASE_URL + `/genre/${mediaType}/list`, {
+        headers
+        }
+      ));
+
+    return res.genres;
+  }
 }

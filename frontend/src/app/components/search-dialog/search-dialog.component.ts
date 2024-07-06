@@ -28,6 +28,7 @@ import { debounce } from '../../utilities/utilities';
 import { SearchEntry, MVEntry, TVEntry } from '../../tmdb.models';
 import { TmdbService } from '../../tmdb.service';
 import { TMDB_IMAGE_W500_BASE_URL } from '../../constants';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-search-dialog',
@@ -37,6 +38,7 @@ import { TMDB_IMAGE_W500_BASE_URL } from '../../constants';
     MatInputModule,
     MatFormFieldModule,
     MatRadioModule,
+    MatChipsModule,
     FormsModule,
     MatButtonModule,
     MatIconModule,
@@ -49,7 +51,8 @@ export class SearchDialogComponent {
   public searchValue = signal<string>('');
   public mediaType = signal<MediaType>(MediaType.MOVIE);
   public searchEntries = signal<SearchEntry[]>([]);
-  public genreMap = new Map<number, string>();
+
+  protected genreMap = new Map<number, string>();
 
   public get isOpen(): boolean {
     return this._isOpen;
@@ -77,7 +80,7 @@ export class SearchDialogComponent {
 
   // angular lifecycle functions
   ngOnInit(): void {
-
+    this.createGenreMap();
   }
 
   ngOnDestroy(): void {
@@ -117,6 +120,14 @@ export class SearchDialogComponent {
 
   private async createGenreMap() {
     // const
+    const mvGenres = await this.tmdbService.getGenres(MediaType.MOVIE);
+    const tvGenres = await this.tmdbService.getGenres(MediaType.TV);
+
+    const combinedArray = [...mvGenres, ...tvGenres];
+
+    combinedArray.forEach(genre => {
+      this.genreMap.set(genre.id, genre.name);
+    })
   }
 
   // component functions
@@ -175,7 +186,7 @@ export class SearchDialogComponent {
           mediaId: element.id,
           poster_path: element.poster_path,
           date: date,
-          genres: element.genre_ids.map(id => id.toString())
+          genres: element.genre_ids.map(id => this.genreMap.get(id) ?? '')
         };
       });
 
