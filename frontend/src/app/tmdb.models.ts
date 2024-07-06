@@ -5,8 +5,11 @@ export interface SearchEntry {
   title: string;
   overview: string;
   backdrop_path: string | null;
+  poster_path: string | null;
   type: MediaType;
   mediaId: number;
+  date: string | null;
+  genres: string[] | null;
 }
 
 export interface TVSearchResponse {

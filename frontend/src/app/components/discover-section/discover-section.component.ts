@@ -58,6 +58,9 @@ export class DiscoverSectionComponent {
             backdrop_path: tvItem.backdrop_path,
             type: MediaType.TV,
             mediaId: tvItem.id,
+            poster_path: null,
+            date: null,
+            genres: null
           };
         })
       )
@@ -69,6 +72,9 @@ export class DiscoverSectionComponent {
             backdrop_path: mvItem.backdrop_path,
             type: MediaType.MOVIE,
             mediaId: mvItem.id,
+            poster_path: null,
+            date: null,
+            genres: null
           };
         })
       );

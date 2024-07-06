@@ -49,6 +49,7 @@ export class SearchDialogComponent {
   public searchValue = signal<string>('');
   public mediaType = signal<MediaType>(MediaType.MOVIE);
   public searchEntries = signal<SearchEntry[]>([]);
+  public genreMap = new Map<number, string>();
 
   public get isOpen(): boolean {
     return this._isOpen;
@@ -75,7 +76,9 @@ export class SearchDialogComponent {
   private destroy$: Subject<void> = new Subject<void>();
 
   // angular lifecycle functions
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   ngOnDestroy(): void {
     this.overlayRef?.dispose();
@@ -110,6 +113,10 @@ export class SearchDialogComponent {
   protected onChangeMediaType(newMediaType: string) {
     this.mediaType.set(newMediaType as MediaType);
     console.log(this.mediaType());
+  }
+
+  private async createGenreMap() {
+    // const
   }
 
   // component functions
@@ -154,15 +161,21 @@ export class SearchDialogComponent {
 
       const entries = results.map((element): SearchEntry => {
         let title = '';
+        let date = '';
         if ('name' in element) title = element.name;
         if ('title' in element) title = element.title;
+        if ('release_date' in element) date = element.release_date;
+        if ('first_air_date' in element) date = element.first_air_date;
 
         return {
           title: title,
           overview: element.overview,
           backdrop_path: element.backdrop_path,
           type: mediaType,
-          mediaId: element.id
+          mediaId: element.id,
+          poster_path: element.poster_path,
+          date: date,
+          genres: element.genre_ids.map(id => id.toString())
         };
       });
 

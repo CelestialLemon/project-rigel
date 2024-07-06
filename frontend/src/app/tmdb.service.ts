@@ -100,4 +100,6 @@ export class TmdbService {
 
     return res.results;
   }
+
+  // async getGenres(mediaType)
 }
