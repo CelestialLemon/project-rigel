@@ -29,6 +29,7 @@ import { SearchEntry, MVEntry, TVEntry } from '../../tmdb.models';
 import { TmdbService } from '../../tmdb.service';
 import { TMDB_IMAGE_W500_BASE_URL } from '../../constants';
 import { MatChipsModule } from '@angular/material/chips';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-dialog',
@@ -61,7 +62,8 @@ export class SearchDialogComponent {
   constructor(
     private readonly overlay: Overlay,
     private readonly elementRef: ElementRef<HTMLElement>,
-    private tmdbService: TmdbService
+    private tmdbService: TmdbService,
+    private router: Router
   ) {
     effect(() => {
       this.search(this.searchValue(), this.mediaType());
@@ -118,6 +120,13 @@ export class SearchDialogComponent {
     console.log(this.mediaType());
   }
 
+  protected onClickSearchEntry(entry: SearchEntry): void {
+    this.router.navigate(['/media-details'], { queryParams: { id: entry.mediaId, type: entry.type }});
+    this.close();
+  }
+
+  // component functions
+
   private async createGenreMap() {
     // const
     const mvGenres = await this.tmdbService.getGenres(MediaType.MOVIE);
@@ -130,7 +139,7 @@ export class SearchDialogComponent {
     })
   }
 
-  // component functions
+
   private createOverlay(): void {
     const parentElement = this.elementRef.nativeElement.parentElement;
     if (parentElement == null) return;
