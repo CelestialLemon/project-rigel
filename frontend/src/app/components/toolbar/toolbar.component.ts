@@ -24,9 +24,6 @@ import { SearchDialogComponent } from '../search-dialog/search-dialog.component'
 })
 export class ToolbarComponent {
 
-  // outputs
-  @Output('hamburgerClick') hamburgerClickEvent = new EventEmitter<Event>();
-
   // variables
 
   @ViewChild('searchDialog', { read: SearchDialogComponent, static: true }) searchDialog !: SearchDialogComponent;
@@ -47,8 +44,8 @@ export class ToolbarComponent {
     }
   }
 
-  protected onClickHamburger(event: Event): void {
-    this.hamburgerClickEvent.emit(event);
+  protected onClickLists(event: Event): void {
+    this.router.navigate(['/lists']);
   }
 
   @HostListener('keydown.escape')
