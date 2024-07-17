@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,11 @@ import { SearchDialogComponent } from '../search-dialog/search-dialog.component'
 })
 export class ToolbarComponent {
 
+  // outputs
+  @Output('hamburgerClick') hamburgerClickEvent = new EventEmitter<Event>();
+
+  // variables
+
   @ViewChild('searchDialog', { read: SearchDialogComponent, static: true }) searchDialog !: SearchDialogComponent;
 
   constructor(private router: Router) {}
@@ -40,6 +45,10 @@ export class ToolbarComponent {
     else {
       this.searchDialog.close();
     }
+  }
+
+  protected onClickHamburger(event: Event): void {
+    this.hamburgerClickEvent.emit(event);
   }
 
   @HostListener('keydown.escape')

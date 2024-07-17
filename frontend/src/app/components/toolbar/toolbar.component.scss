@@ -1,5 +1,7 @@
 :host {
   .toolbar {
     --mat-toolbar-standard-height: 3rem;
+    // corresponds to bg-gray-900
+    --mat-toolbar-container-background-color: rgb(23 23 23);
   }
 }
