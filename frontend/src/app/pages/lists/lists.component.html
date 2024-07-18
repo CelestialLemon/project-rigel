@@ -1,6 +1,6 @@
 <div class="lists-container w-full h-full flex flex-col p-4 box-border">
   <mat-accordion [displayMode]="'flat'" [multi]="true">
-    @for (list of lists; track list.name) {
+    @for (list of lists(); track list.name) {
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>{{ list.name }}</mat-panel-title>
