@@ -3,3 +3,4 @@ node_modules
 frontend/dist
 frontend/src/app/constants.ts
 api-test.http
+rigel-data.json
