@@ -3,11 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
 type App struct {
-	ctx context.Context
+	isDataSaved bool
+	ctx         context.Context
 }
 
 // NewApp creates a new App application struct
@@ -19,17 +22,37 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	a.isDataSaved = false
+}
+
+func (a *App) beforeClose(ctx context.Context) bool {
+	// if data is not saved emit event and don't close
+	// frontend will call the save data function and call quit again
+
+	// next time isDataSaved will be true and application will quit normally
+	if !a.isDataSaved {
+		runtime.LogDebug(ctx, "Emitting event")
+		runtime.EventsEmit(ctx, "before-close")
+		return true
+	} else {
+		return false
+	}
 }
 
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
+	a.isDataSaved = true
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
 func (a *App) ReadData() []WatchList {
+	runtime.LogDebug(a.ctx, "reading data from disk")
 	return ReadLists()
 }
 
 func (a *App) WriteData(lists []WatchList) {
+	runtime.LogDebug(a.ctx, "writing data to disk")
+	fmt.Println("lists: ", lists)
+	a.isDataSaved = true
 	WriteLists(lists)
 }

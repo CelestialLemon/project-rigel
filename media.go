@@ -9,11 +9,13 @@ import (
 const DATA_FILE_PATH = "./rigel-data.json"
 
 type TVShow struct {
-	Id string `json:"id"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type Movie struct {
-	Id string `json:"id"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type WatchList struct {

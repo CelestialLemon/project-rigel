@@ -2,6 +2,7 @@ export namespace main {
 	
 	export class Movie {
 	    id: string;
+	    name: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Movie(source);
@@ -10,10 +11,12 @@ export namespace main {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
+	        this.name = source["name"];
 	    }
 	}
 	export class TVShow {
 	    id: string;
+	    name: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new TVShow(source);
@@ -22,6 +25,7 @@ export namespace main {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
+	        this.name = source["name"];
 	    }
 	}
 	export class WatchList {
