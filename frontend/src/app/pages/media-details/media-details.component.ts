@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre } from '../../tmdb.models';
 import {
@@ -17,6 +17,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ListsService } from '../../services/lists.service';
+import { main } from '../../../../wailsjs/go/models';
 
 export enum MediaType {
   MOVIE = 'movie',
@@ -56,10 +58,12 @@ export class MediaDetailsComponent {
 
   protected mediaMVDetails: MediaMVDetailsResponse | null = null;
 
+  private listsService = inject(ListsService);
+
   constructor(
     private route: ActivatedRoute,
     private tmdbService: TmdbService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
@@ -108,6 +112,35 @@ export class MediaDetailsComponent {
     if (this.mediaId == null) return;
 
     this.activeSeasonDetails = await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, newActiveSeason);
+  }
+
+  protected onClickPlanToWatch(): void {
+    if (this.mediaId == null) return;
+
+    if (this.mediaType === MediaType.MOVIE) {
+      if (this.mediaMVDetails == null) return;
+
+
+      let movieToAdd = new main.Movie();
+      movieToAdd.id = this.mediaId;
+      movieToAdd.name = this.mediaMVDetails.title;
+
+      const lists = this.listsService.lists.getValue();
+
+      lists.find((element) => element.name === 'Plan to Watch')?.movies.push(movieToAdd);
+      this.listsService.lists.next(lists);
+    }
+    else if (this.mediaType === MediaType.TV) {
+      if (this.mediaTVDetails == null) return;
+
+      let tvShowToAdd = new main.TVShow();
+      tvShowToAdd.id = this.mediaId;
+      tvShowToAdd.name = this.mediaTVDetails.name;
+
+      const lists = this.listsService.lists.getValue();
+      lists.find((element) => element.name === 'Plan to Watch')?.tvshows.push(tvShowToAdd);
+      this.listsService.lists.next(lists);
+    }
   }
 
   // template get functions
