@@ -29,3 +29,7 @@ func (a *App) Greet(name string) string {
 func (a *App) ReadData() []WatchList {
 	return ReadLists()
 }
+
+func (a *App) WriteData(lists []WatchList) {
+	WriteLists(lists)
+}

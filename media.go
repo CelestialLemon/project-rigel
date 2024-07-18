@@ -36,8 +36,8 @@ func ReadLists() []WatchList {
 	if err != nil {
 		fmt.Println("ERROR could not open file: ", err)
 		if os.IsNotExist(err) {
-			defaultLists := GetDefaultLists()
-			CreateNewDataFile(defaultLists)
+			defaultLists := getDefaultLists()
+			createNewDataFile(defaultLists)
 			return lists
 		}
 	}
@@ -53,7 +53,7 @@ func ReadLists() []WatchList {
 	return lists
 }
 
-func CreateNewDataFile(lists []WatchList) {
+func createNewDataFile(lists []WatchList) {
 
 	fmt.Println("Creating new data file")
 
@@ -69,7 +69,7 @@ func CreateNewDataFile(lists []WatchList) {
 	}
 }
 
-func GetDefaultLists() []WatchList {
+func getDefaultLists() []WatchList {
 	defaultLists := []WatchList{
 		{Name: "Plan to Watch", Movies: []Movie{}, TVShows: []TVShow{}},
 		{Name: "Watching", Movies: []Movie{}, TVShows: []TVShow{}},
@@ -79,4 +79,17 @@ func GetDefaultLists() []WatchList {
 	}
 
 	return defaultLists
+}
+
+func WriteLists(lists []WatchList) {
+	file, err := os.Create(DATA_FILE_PATH)
+	if err != nil {
+		fmt.Println("ERROR: ", err)
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	if err := encoder.Encode(lists); err != nil {
+		fmt.Println("ERROR: ", err)
+	}
 }
