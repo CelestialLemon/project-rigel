@@ -6,6 +6,4 @@ export function Greet(arg1:string):Promise<string>;
 
 export function ReadData():Promise<Array<main.WatchList>>;
 
-export function SaveData(arg1:Array<main.WatchList>):Promise<void>;
-
-export function WriteData(arg1:Array<main.WatchList>):Promise<void>;
+export function WriteDataAndQuit(arg1:Array<main.WatchList>):Promise<void>;

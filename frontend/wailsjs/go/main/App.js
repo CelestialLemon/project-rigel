@@ -10,10 +10,6 @@ export function ReadData() {
   return window['go']['main']['App']['ReadData']();
 }
 
-export function SaveData(arg1) {
-  return window['go']['main']['App']['SaveData'](arg1);
-}
-
-export function WriteData(arg1) {
-  return window['go']['main']['App']['WriteData'](arg1);
+export function WriteDataAndQuit(arg1) {
+  return window['go']['main']['App']['WriteDataAndQuit'](arg1);
 }

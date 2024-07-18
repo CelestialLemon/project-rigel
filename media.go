@@ -40,7 +40,7 @@ func ReadLists() []WatchList {
 		if os.IsNotExist(err) {
 			defaultLists := getDefaultLists()
 			createNewDataFile(defaultLists)
-			return lists
+			return defaultLists
 		}
 	}
 

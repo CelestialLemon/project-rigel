@@ -1,5 +1,5 @@
 import { effect, Injectable, signal } from '@angular/core';
-import { ReadData, WriteData, Greet, SaveData} from '../../../wailsjs/go/main/App'
+import { ReadData, WriteDataAndQuit, Greet } from '../../../wailsjs/go/main/App'
 import { main } from '../../../wailsjs/go/models';
 import * as runtime from '../../../wailsjs/runtime/runtime';
 
@@ -13,18 +13,13 @@ export class ListsService {
   constructor() {
     this.readData();
     runtime.EventsOn('before-close', () => {
-      this.saveDataAndQuit();
+      WriteDataAndQuit(this.lists);
     });
   }
 
   private async readData() {
     const res = await ReadData();
     this.lists = res;
-  }
-
-  private saveDataAndQuit() {
-    WriteData(this.lists);
-    runtime.Quit();
   }
 }
 

@@ -41,18 +41,18 @@ func (a *App) beforeClose(ctx context.Context) bool {
 
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
-	a.isDataSaved = true
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
 func (a *App) ReadData() []WatchList {
 	runtime.LogDebug(a.ctx, "reading data from disk")
-	return ReadLists()
+	res := ReadLists()
+	fmt.Println("Reading data: ", res)
+	return res
 }
 
-func (a *App) WriteData(lists []WatchList) {
-	runtime.LogDebug(a.ctx, "writing data to disk")
-	fmt.Println("lists: ", lists)
-	a.isDataSaved = true
+func (a *App) WriteDataAndQuit(lists []WatchList) {
 	WriteLists(lists)
+	a.isDataSaved = true
+	runtime.Quit(a.ctx)
 }
