@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UserDataService } from '../../services/user-data.service';
 import { main } from '../../../../wailsjs/go/models';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-media-details',
@@ -43,7 +44,15 @@ export class MediaDetailsComponent {
   protected mediaId = signal<string | null>(null);
   protected mediaType = signal<MediaType>(MediaType.MOVIE);
 
+  // signal to be updated when user data from service changes
+  // will be used to trigger computed signals that should be recomputed on data update
+  // not sure if this is the best approach tho
+  protected userDataUpdate = signal(0);
+
   protected mvWatchStatus = computed(() => {
+    // call this here to allow this computed signal to trigger on data update
+    this.userDataUpdate();
+
     if (this.mediaType() === MediaType.MOVIE) {
       return this.userDataService.getMovieStatus(this.mediaId() ?? '');
     }
@@ -53,6 +62,9 @@ export class MediaDetailsComponent {
   });
 
   protected tvWatchStatus = computed(() => {
+    // call this here to allow this computed signal to trigger on data update
+    this.userDataUpdate();
+
     if (this.mediaType() === MediaType.TV) {
       return this.userDataService.getTVShowStatus(this.mediaId() ?? '');
     }
@@ -73,6 +85,8 @@ export class MediaDetailsComponent {
 
   private userDataService = inject(UserDataService);
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private route: ActivatedRoute,
     private tmdbService: TmdbService,
@@ -83,6 +97,15 @@ export class MediaDetailsComponent {
     this.route.queryParamMap.subscribe((params) => {
       this.handleParamsUpdate(params);
     });
+
+    this.userDataService.userData.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.userDataUpdate.set(this.userDataUpdate() + 1);
+    })
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // component functions
