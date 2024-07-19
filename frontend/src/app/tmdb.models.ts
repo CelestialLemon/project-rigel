@@ -3,6 +3,22 @@ export enum MediaType {
   TV = 'tv'
 };
 
+export enum MVWatchStatus {
+  UNWATCHED = 'Unwatched',
+  PLANTOWATCH = 'Plan to watch',
+  WATCHING = 'Watching',
+  COMPLETED = 'Completed'
+};
+
+export enum TVWatchStatus {
+  UNWATCHED = 'Unwatched',
+  PLANTOWATCH = 'Plan to watch',
+  WATCHING = 'Watching',
+  ONHOLD = 'On Hold',
+  DROPPED = 'Dropped',
+  COMPLETED = 'Completed'
+};
+
 // custom interface that condenses mv entry and tv entry into one
 export interface SearchEntry {
   title: string;

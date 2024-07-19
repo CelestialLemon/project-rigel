@@ -211,7 +211,7 @@ func createNewDataFile(userData UserData) {
 func getDefaultUserData() UserData {
 
 	defaultTVLists := []TVWatchList{
-		{Name: "Plan to Watch", Items: []TVShow{}},
+		{Name: "Plan to watch", Items: []TVShow{}},
 		{Name: "Watching", Items: []TVShow{}},
 		{Name: "On Hold", Items: []TVShow{}},
 		{Name: "Dropped", Items: []TVShow{}},
@@ -219,7 +219,7 @@ func getDefaultUserData() UserData {
 	}
 
 	defaultMVLists := []MVWatchList{
-		{Name: "Plan to Watch", Items: []Movie{}},
+		{Name: "Plan to watch", Items: []Movie{}},
 		{Name: "Watching", Items: []Movie{}},
 		{Name: "Completed", Items: []Movie{}},
 	}

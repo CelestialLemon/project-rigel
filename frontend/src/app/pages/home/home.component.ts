@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DiscoverSectionComponent } from '../../components/discover-section/discover-section.component';
 import { Router } from '@angular/router';
 import { SearchEntry } from '../../tmdb.models';
+import { UserDataService } from '../../services/user-data.service';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,8 @@ import { SearchEntry } from '../../tmdb.models';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+
+  private userDataService = inject(UserDataService);
   constructor(private router: Router) {}
 
   protected onClickMediaEntry(item: SearchEntry): void {

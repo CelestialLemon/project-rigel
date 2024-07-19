@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre, MediaType, MVWatchStatus, TVWatchStatus } from '../../tmdb.models';
 import {
@@ -43,6 +43,24 @@ export class MediaDetailsComponent {
   protected mediaId = signal<string | null>(null);
   protected mediaType = signal<MediaType>(MediaType.MOVIE);
 
+  protected mvWatchStatus = computed(() => {
+    if (this.mediaType() === MediaType.MOVIE) {
+      return this.userDataService.getMovieStatus(this.mediaId() ?? '');
+    }
+    else {
+      return MVWatchStatus.UNWATCHED;
+    }
+  });
+
+  protected tvWatchStatus = computed(() => {
+    if (this.mediaType() === MediaType.TV) {
+      return this.userDataService.getTVShowStatus(this.mediaId() ?? '');
+    }
+    else {
+      return TVWatchStatus.UNWATCHED;
+    }
+  });
+
   protected mediaTVDetails: MediaTVDetailsResponse | null = null;
   protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
   protected activeSeasonNumber: number | null = null;
@@ -59,11 +77,7 @@ export class MediaDetailsComponent {
     private route: ActivatedRoute,
     private tmdbService: TmdbService,
     private sanitizer: DomSanitizer,
-  ) {
-    effect(() => {
-
-    })
-  }
+  ) {}
 
   ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {

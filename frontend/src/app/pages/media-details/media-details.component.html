@@ -6,7 +6,7 @@
 <div class="h-5/6 w-full p-24 box-border flex gap-12 z-10">
   <img class="min-w-1/4 shadow-lg shadow-black" [src]="posterUrl" loading="eager" />
   <div class="flex flex-col">
-    <h1 class="text-8xl text-white mb-8">{{ mediaTitle }}</h1>
+    <h1 class="text-8xl text-white mb-8">{{ mediaTitle }} {{ mvWatchStatus() }} {{ tvWatchStatus()}}</h1>
     <p class="text-white text-lg w-full mb-4 line-clamp-5">
       {{ mediaOverview }}
     </p>
