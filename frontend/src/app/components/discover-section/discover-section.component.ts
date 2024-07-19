@@ -15,7 +15,7 @@ import { lastValueFrom } from 'rxjs';
 import { clamp } from '../../utilities/utilities';
 import { TmdbService } from '../../tmdb.service';
 import { MatIconModule } from '@angular/material/icon';
-import { MediaType } from '../../pages/media-details/media-details.component';
+import { MediaType } from '../../tmdb.models';
 
 @Component({
   selector: 'app-discover-section',

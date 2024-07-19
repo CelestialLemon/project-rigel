@@ -86,6 +86,75 @@ type UserData struct {
 	MVLists []MVWatchList `json:"mvlists"`
 }
 
+func (ud *UserData) AddTVShowToList(listName string, tvShow TVShow) {
+	fmt.Println("Adding TV Show to list")
+	fmt.Println("listName: ", listName, ", tvShow: ", tvShow)
+
+	var listToAddTo *TVWatchList = nil
+
+	for i, list := range ud.TVLists {
+		if list.Name == listName {
+			listToAddTo = &ud.TVLists[i]
+		}
+	}
+
+	if listToAddTo == nil {
+		fmt.Println("ERROR: List does not exist")
+		return
+	}
+
+	alreadyExists := false
+
+	for _, item := range listToAddTo.Items {
+		if item.Id == tvShow.Id {
+			alreadyExists = true
+		}
+	}
+
+	if alreadyExists {
+		fmt.Println("ERROR: Show already exists in the list")
+		return
+	}
+
+	listToAddTo.Items = append(listToAddTo.Items, tvShow)
+}
+
+func (ud *UserData) AddMovieToList(listName string, movie Movie) {
+	fmt.Println("Adding Movie to list")
+	fmt.Println("listName: ", listName, ", movie: ", movie)
+
+	var listToAddTo *MVWatchList = nil
+
+	for i, list := range ud.MVLists {
+		if list.Name == listName {
+			listToAddTo = &ud.MVLists[i]
+		}
+	}
+
+	if listToAddTo == nil {
+		fmt.Println("ERROR: List does not exist")
+		return
+	}
+
+	alreadyExists := false
+
+	for _, item := range listToAddTo.Items {
+		if item.Id == movie.Id {
+			alreadyExists = true
+		}
+	}
+
+	if alreadyExists {
+		fmt.Println("ERROR: Show already exists in the list")
+		return
+	}
+
+	listToAddTo.Items = append(listToAddTo.Items, movie)
+}
+
+// -------------------------------------------------------------------------------------------
+// user data file utility functions
+
 /**
  * Reads the json data present in the data file
  * If file is not present creates the file and writes empty data to the file
@@ -117,6 +186,9 @@ func ReadDataFromFile() UserData {
 	return userData
 }
 
+/**
+ * Creates new data file and writes the provided user data to it
+ */
 func createNewDataFile(userData UserData) {
 
 	fmt.Println("Creating new data file")
@@ -133,6 +205,9 @@ func createNewDataFile(userData UserData) {
 	}
 }
 
+/**
+ * Default configuration of the user data file for a new user
+ */
 func getDefaultUserData() UserData {
 
 	defaultTVLists := []TVWatchList{
@@ -157,6 +232,9 @@ func getDefaultUserData() UserData {
 	return defaultData
 }
 
+/**
+ * Writes the given user dat to file
+ */
 func WriteUserData(userData UserData) {
 	file, err := os.Create(DATA_FILE_PATH)
 	if err != nil {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TVSearchResponse, MediaTVDetailsResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVSeasonResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MVSearchResponse, GenreResponse } from './tmdb.models';
 import { TMDB_API_BASE_URL, TMDB_API_KEY } from './constants';
 import { lastValueFrom } from 'rxjs';
-import { MediaType } from './pages/media-details/media-details.component';
+import { MediaType } from './tmdb.models';
 
 @Injectable({
   providedIn: 'root'

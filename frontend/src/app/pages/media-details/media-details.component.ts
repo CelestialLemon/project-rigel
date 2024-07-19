@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre } from '../../tmdb.models';
+import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre, MediaType } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -19,11 +19,6 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UserDataService } from '../../services/user-data.service';
 import { main } from '../../../../wailsjs/go/models';
-
-export enum MediaType {
-  MOVIE = 'movie',
-  TV = 'tv'
-};
 
 @Component({
   selector: 'app-media-details',
@@ -114,7 +109,7 @@ export class MediaDetailsComponent {
     this.activeSeasonDetails = await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, newActiveSeason);
   }
 
-  protected onClickPlanToWatch(): void {
+  protected async onClickPlanToWatch() {
     if (this.mediaId == null) return;
 
     if (this.mediaType === MediaType.MOVIE) {
@@ -126,9 +121,7 @@ export class MediaDetailsComponent {
       movieToAdd.name = this.mediaMVDetails.title;
       movieToAdd.poster_path = this.mediaMVDetails.poster_path;
 
-      const userData = this.userDataService.getUserData();
-      userData.mvlists.find((list) => list.name === 'Plan to Watch')?.items.push(movieToAdd);
-      this.userDataService.updateUserData(userData);
+      await this.userDataService.addMovieToList('Plan to Watch', movieToAdd);
     }
     else if (this.mediaType === MediaType.TV) {
       if (this.mediaTVDetails == null) return;
@@ -138,9 +131,7 @@ export class MediaDetailsComponent {
       tvShowToAdd.name = this.mediaTVDetails.name;
       tvShowToAdd.poster_path = this.mediaTVDetails.poster_path;
 
-      const userData = this.userDataService.getUserData();
-      userData.tvlists.find((list) => list.name === 'Plan to Watch')?.items.push(tvShowToAdd);
-      this.userDataService.updateUserData(userData);
+      await this.userDataService.addTVShowToList('Plan to Watch', tvShowToAdd);
     }
   }
 

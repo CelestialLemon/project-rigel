@@ -28,6 +28,7 @@ func main() {
 		OnBeforeClose:    app.beforeClose,
 		Bind: []interface{}{
 			app,
+			&app.userData,
 		},
 	})
 

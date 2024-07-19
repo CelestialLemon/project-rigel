@@ -1,4 +1,7 @@
-import { MediaType } from "./pages/media-details/media-details.component";
+export enum MediaType {
+  MOVIE = 'movie',
+  TV = 'tv'
+};
 
 // custom interface that condenses mv entry and tv entry into one
 export interface SearchEntry {

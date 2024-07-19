@@ -23,7 +23,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MediaType } from '../../pages/media-details/media-details.component';
+import { MediaType } from '../../tmdb.models';
 import { debounce } from '../../utilities/utilities';
 import { SearchEntry, MVEntry, TVEntry } from '../../tmdb.models';
 import { TmdbService } from '../../tmdb.service';
