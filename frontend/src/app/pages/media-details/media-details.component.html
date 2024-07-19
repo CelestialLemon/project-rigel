@@ -17,15 +17,49 @@
       }
     </mat-chip-set>
 
+    <span class="mb-8 text-lg text-white">
+      Current status: {{ mediaType() === 'movie' ? mvWatchStatus() : tvWatchStatus() }}
+    </span>
+
     <div class="flex gap-4 mb-4">
-      <button mat-flat-button class="text-2xl">
-        <mat-icon>play_arrow</mat-icon>
-        Start Watching
-      </button>
-      <button mat-flat-button (click)="onClickPlanToWatch()">
-        <mat-icon>add</mat-icon>
-        Plan to Watch
-      </button>
+      @if (mediaType() === 'movie') {
+        @if (mvWatchStatus() === 'Unwatched' || mvWatchStatus() === 'Plan to watch') {
+          <button mat-flat-button>
+            <mat-icon>play_arrow</mat-icon>
+            Start Watching
+          </button>
+        }
+        @if (mvWatchStatus() === 'Unwatched') {
+          <button mat-flat-button>
+            <mat-icon>schedule</mat-icon>
+            Plan to Watch
+          </button>
+        }
+        @if (mvWatchStatus() === 'Plan to watch') {
+          <button mat-flat-button>
+            <mat-icon>undo</mat-icon>
+            Remove from plan
+          </button>
+        }
+        @if (mvWatchStatus() === 'Watching') {
+          <button mat-flat-button>
+            <mat-icon>hourglass_empty</mat-icon>
+            Move to plan
+          </button>
+        }
+        @if (mvWatchStatus() === 'Watching') {
+          <button mat-flat-button>
+            <mat-icon>check</mat-icon>
+            Completed
+          </button>
+        }
+        @if (mvWatchStatus() === 'Completed') {
+          <button mat-flat-button>
+            <mat-icon>delete</mat-icon>
+            Remove
+          </button>
+        }
+      }
     </div>
   </div>
 </div>
