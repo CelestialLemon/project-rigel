@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ListsService } from '../../services/lists.service';
+import { UserDataService } from '../../services/user-data.service';
 import { main } from '../../../../wailsjs/go/models';
 
 export enum MediaType {
@@ -58,7 +58,7 @@ export class MediaDetailsComponent {
 
   protected mediaMVDetails: MediaMVDetailsResponse | null = null;
 
-  private listsService = inject(ListsService);
+  private userDataService = inject(UserDataService);
 
   constructor(
     private route: ActivatedRoute,
@@ -125,10 +125,9 @@ export class MediaDetailsComponent {
       movieToAdd.id = this.mediaId;
       movieToAdd.name = this.mediaMVDetails.title;
 
-      const lists = this.listsService.lists.getValue();
-
-      lists.find((element) => element.name === 'Plan to Watch')?.movies.push(movieToAdd);
-      this.listsService.lists.next(lists);
+      const userData = this.userDataService.getUserData();
+      userData.mvlists.find((list) => list.name === 'Plan to Watch')?.items.push(movieToAdd);
+      this.userDataService.updateUserData(userData);
     }
     else if (this.mediaType === MediaType.TV) {
       if (this.mediaTVDetails == null) return;
@@ -137,9 +136,9 @@ export class MediaDetailsComponent {
       tvShowToAdd.id = this.mediaId;
       tvShowToAdd.name = this.mediaTVDetails.name;
 
-      const lists = this.listsService.lists.getValue();
-      lists.find((element) => element.name === 'Plan to Watch')?.tvshows.push(tvShowToAdd);
-      this.listsService.lists.next(lists);
+      const userData = this.userDataService.getUserData();
+      userData.tvlists.find((list) => list.name === 'Plan to Watch')?.items.push(tvShowToAdd);
+      this.userDataService.updateUserData(userData);
     }
   }
 

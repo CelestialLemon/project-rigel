@@ -1,13 +1,40 @@
 <div class="lists-container w-full h-full flex flex-col p-4 box-border">
-  <mat-accordion [displayMode]="'flat'" [multi]="true">
-    @for (list of lists(); track list.name) {
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>{{ list.name }}</mat-panel-title>
-          <mat-panel-description>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-      </mat-expansion-panel>
-    }
-  </mat-accordion>
+  <mat-tab-group>
+    <mat-tab label="Movies">
+      <div class="mt-4">
+        <mat-accordion [displayMode]="'flat'" [multi]="true">
+          @for (list of mvLists(); track list.name) {
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ list.name }}</mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="flex flex-col mx-8">
+                @for (movie of list.items; track movie.name) {
+                  <span>{{ movie.name }}</span>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+    </mat-tab>
+    <mat-tab label="TV Shows">
+      <div class="mt-4">
+        <mat-accordion [displayMode]="'flat'" [multi]="true">
+          @for (list of tvLists(); track list.name) {
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ list.name }}</mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>
