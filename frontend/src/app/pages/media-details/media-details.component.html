@@ -30,7 +30,7 @@
   </div>
 </div>
 <mat-tab-group dynamicHeight>
-  @if (mediaType === 'tv') {
+  @if (mediaType() === 'tv') {
   <mat-tab label="Seasons & Episodes">
     @if (mediaTVDetails != null) {
     <div class="flex flex-col box-border p-8">

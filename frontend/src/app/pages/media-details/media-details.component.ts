@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre, MediaType } from '../../tmdb.models';
+import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre, MediaType, MVWatchStatus, TVWatchStatus } from '../../tmdb.models';
 import {
   TMDB_IMAGE_ORIGINAL_BASE_URL,
   TMDB_IMAGE_W500_BASE_URL,
@@ -40,8 +40,8 @@ import { main } from '../../../../wailsjs/go/models';
   styleUrl: './media-details.component.scss',
 })
 export class MediaDetailsComponent {
-  protected mediaId: string | null = null;
-  protected mediaType: MediaType | null = null;
+  protected mediaId = signal<string | null>(null);
+  protected mediaType = signal<MediaType>(MediaType.MOVIE);
 
   protected mediaTVDetails: MediaTVDetailsResponse | null = null;
   protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
@@ -59,7 +59,11 @@ export class MediaDetailsComponent {
     private route: ActivatedRoute,
     private tmdbService: TmdbService,
     private sanitizer: DomSanitizer,
-  ) {}
+  ) {
+    effect(() => {
+
+    })
+  }
 
   ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
@@ -71,32 +75,33 @@ export class MediaDetailsComponent {
 
   private async handleParamsUpdate(params: ParamMap) {
     // get media type and condense to type
-    const mediaType = params.get('type');
-    if (mediaType != null && Object.values(MediaType).includes(mediaType as MediaType)) {
-      this.mediaType = mediaType as MediaType;
+    const mediaTypeParam = params.get('type');
+    if (mediaTypeParam != null && Object.values(MediaType).includes(mediaTypeParam as MediaType)) {
+      this.mediaType.set(mediaTypeParam as MediaType);
     }
 
     // get media id
-    this.mediaId = params.get('id');
-
+    this.mediaId.set(params.get('id'));
+    const mediaId = this.mediaId();
+    const mediaType = this.mediaType();
     // if both params are present fetch the media details
-    if (this.mediaId != null && this.mediaType != null) {
-      if (this.mediaType === MediaType.MOVIE) {
-        this.mediaMVDetails = await this.tmdbService.getMediaDetails(this.mediaId, this.mediaType) as MediaMVDetailsResponse;
+    if (mediaId != null && mediaType != null) {
+      if (mediaType === MediaType.MOVIE) {
+        this.mediaMVDetails = await this.tmdbService.getMediaDetails(mediaId, mediaType) as MediaMVDetailsResponse;
       }
-      else if (this.mediaType === MediaType.TV) {
-        this.mediaTVDetails = await this.tmdbService.getMediaDetails(this.mediaId, this.mediaType) as MediaTVDetailsResponse;
+      else if (mediaType === MediaType.TV) {
+        this.mediaTVDetails = await this.tmdbService.getMediaDetails(mediaId, mediaType) as MediaTVDetailsResponse;
         this.activeSeasonDetails =
-        await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, 1);
+        await this.tmdbService.getMediaTVSeasonDetails(mediaId, 1);
       this.activeSeasonNumber = this.activeSeasonDetails.season_number;
       }
       else {
         console.error("Un-supported media type");
       }
 
-      this.creditDetails = await this.tmdbService.getMediaCreditsDetails(this.mediaId, this.mediaType);
-      this.imagesDetails = await this.tmdbService.getMediaImagesDetails(this.mediaId, this.mediaType);
-      this.videosDetails = await this.tmdbService.getMediaVideosDetails(this.mediaId, this.mediaType);
+      this.creditDetails = await this.tmdbService.getMediaCreditsDetails(mediaId, mediaType);
+      this.imagesDetails = await this.tmdbService.getMediaImagesDetails(mediaId, mediaType);
+      this.videosDetails = await this.tmdbService.getMediaVideosDetails(mediaId, mediaType);
 
     }
   }
@@ -104,30 +109,32 @@ export class MediaDetailsComponent {
   // event function
 
   protected async onActiveSeasonChange(newActiveSeason: number) {
-    if (this.mediaId == null) return;
+    const mediaId = this.mediaId();
+    if (mediaId == null) return;
 
-    this.activeSeasonDetails = await this.tmdbService.getMediaTVSeasonDetails(this.mediaId, newActiveSeason);
+    this.activeSeasonDetails = await this.tmdbService.getMediaTVSeasonDetails(mediaId, newActiveSeason);
   }
 
   protected async onClickPlanToWatch() {
-    if (this.mediaId == null) return;
+    const mediaId = this.mediaId();
+    if (mediaId == null) return;
 
-    if (this.mediaType === MediaType.MOVIE) {
+    if (this.mediaType() === MediaType.MOVIE) {
       if (this.mediaMVDetails == null) return;
 
 
       let movieToAdd = new main.Movie();
-      movieToAdd.id = this.mediaId;
+      movieToAdd.id = mediaId;
       movieToAdd.name = this.mediaMVDetails.title;
       movieToAdd.poster_path = this.mediaMVDetails.poster_path;
 
       await this.userDataService.addMovieToList('Plan to Watch', movieToAdd);
     }
-    else if (this.mediaType === MediaType.TV) {
+    else if (this.mediaType() === MediaType.TV) {
       if (this.mediaTVDetails == null) return;
 
       let tvShowToAdd = new main.TVShow();
-      tvShowToAdd.id = this.mediaId;
+      tvShowToAdd.id = mediaId;
       tvShowToAdd.name = this.mediaTVDetails.name;
       tvShowToAdd.poster_path = this.mediaTVDetails.poster_path;
 
@@ -139,7 +146,7 @@ export class MediaDetailsComponent {
 
   protected get mediaTitle(): string {
 
-    switch(this.mediaType) {
+    switch(this.mediaType()) {
       case MediaType.MOVIE:
         return this.mediaMVDetails?.title ?? '';
 
@@ -154,7 +161,7 @@ export class MediaDetailsComponent {
 
   protected get mediaOverview(): string {
 
-    switch(this.mediaType) {
+    switch(this.mediaType()) {
       case MediaType.MOVIE:
         return this.mediaMVDetails?.overview ?? '';
 
@@ -168,7 +175,7 @@ export class MediaDetailsComponent {
   protected get mediaGenres(): string[] {
     let genres: MediaGenre[] = [];
 
-    switch(this.mediaType) {
+    switch(this.mediaType()) {
       case MediaType.MOVIE:
         genres = this.mediaMVDetails?.genres ?? [];
         break
@@ -189,7 +196,7 @@ export class MediaDetailsComponent {
 
     let poster_path = '';
 
-    switch(this.mediaType) {
+    switch(this.mediaType()) {
       case MediaType.MOVIE:
         poster_path = this.mediaMVDetails?.poster_path ?? '';
         break;
@@ -210,7 +217,7 @@ export class MediaDetailsComponent {
 
     let backdrop_path = '';
 
-    switch(this.mediaType) {
+    switch(this.mediaType()) {
       case MediaType.MOVIE:
         backdrop_path = this.mediaMVDetails?.backdrop_path ?? '';
         break;
