@@ -11,9 +11,12 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
 
-              <div class="flex flex-col mx-8">
+              <div class="flex flex-row gap-8 mx-8 items-stretch">
                 @for (movie of list.items; track movie.name) {
-                  <span>{{ movie.name }}</span>
+                  <div class="w-64 flex flex-col gap-4">
+                    <img class="w-full rounded-md" [src]="TMDB_IMAGE_W500_BASE_URL + movie.poster_path" alt="Cannot load image" />
+                    <span class="text-lg">{{ movie.name }}</span>
+                  </div>
                 }
               </div>
             </mat-expansion-panel>
@@ -31,6 +34,15 @@
                 <mat-panel-description>
                 </mat-panel-description>
               </mat-expansion-panel-header>
+
+              <div class="flex flex-row gap-8 mx-8 items-stretch">
+                @for (tvShow of list.items; track tvShow.name) {
+                  <div class="w-64 flex flex-col gap-4">
+                    <img class="w-full rounded-md" [src]="TMDB_IMAGE_W500_BASE_URL + tvShow.poster_path" alt="Cannot load image" />
+                    <span class="text-lg">{{ tvShow.name }}</span>
+                  </div>
+                }
+              </div>
             </mat-expansion-panel>
           }
         </mat-accordion>

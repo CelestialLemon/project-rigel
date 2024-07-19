@@ -7,6 +7,7 @@ import * as runtime from '../../../../wailsjs/runtime/runtime';
 import { main } from '../../../../wailsjs/go/models';
 import { Subject, takeUntil } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
+import { TMDB_IMAGE_W500_BASE_URL } from '../../constants';
 
 @Component({
   selector: 'app-lists',
@@ -38,5 +39,10 @@ export class ListsComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // template get functions
+  protected get TMDB_IMAGE_W500_BASE_URL(): string {
+    return TMDB_IMAGE_W500_BASE_URL;
   }
 }

@@ -49,20 +49,26 @@ func (a *App) SetUserData(newUserData UserData) {
 	runtime.LogDebug(a.ctx, "Backend call | Set user data")
 	fmt.Println("new user data: ", newUserData)
 	a.userData = newUserData
+
+	// TODO: Remove this later
+	WriteUserData(newUserData)
 }
 
-// #pragma region user data functions
+// -------------------------------------------------------------------------------------------
+// user data utility functions
 
 const DATA_FILE_PATH = "./rigel-data.json"
 
 type TVShow struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	PosterPath string `json:"poster_path"`
 }
 
 type Movie struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	PosterPath string `json:"poster_path"`
 }
 
 type TVWatchList struct {

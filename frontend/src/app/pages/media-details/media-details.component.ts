@@ -124,6 +124,7 @@ export class MediaDetailsComponent {
       let movieToAdd = new main.Movie();
       movieToAdd.id = this.mediaId;
       movieToAdd.name = this.mediaMVDetails.title;
+      movieToAdd.poster_path = this.mediaMVDetails.poster_path;
 
       const userData = this.userDataService.getUserData();
       userData.mvlists.find((list) => list.name === 'Plan to Watch')?.items.push(movieToAdd);
@@ -135,6 +136,7 @@ export class MediaDetailsComponent {
       let tvShowToAdd = new main.TVShow();
       tvShowToAdd.id = this.mediaId;
       tvShowToAdd.name = this.mediaTVDetails.name;
+      tvShowToAdd.poster_path = this.mediaTVDetails.poster_path;
 
       const userData = this.userDataService.getUserData();
       userData.tvlists.find((list) => list.name === 'Plan to Watch')?.items.push(tvShowToAdd);

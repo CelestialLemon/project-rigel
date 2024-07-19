@@ -3,6 +3,7 @@ export namespace main {
 	export class Movie {
 	    id: string;
 	    name: string;
+	    poster_path: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Movie(source);
@@ -12,6 +13,7 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.name = source["name"];
+	        this.poster_path = source["poster_path"];
 	    }
 	}
 	export class MVWatchList {
@@ -50,6 +52,7 @@ export namespace main {
 	export class TVShow {
 	    id: string;
 	    name: string;
+	    poster_path: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new TVShow(source);
@@ -59,6 +62,7 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.name = source["name"];
+	        this.poster_path = source["poster_path"];
 	    }
 	}
 	export class TVWatchList {
