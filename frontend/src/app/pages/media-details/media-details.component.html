@@ -30,31 +30,31 @@
           </button>
         }
         @if (mvWatchStatus() === 'Unwatched') {
-          <button mat-flat-button>
+          <button mat-flat-button (click)="onClickPlanToWatch()">
             <mat-icon>schedule</mat-icon>
             Plan to Watch
           </button>
         }
         @if (mvWatchStatus() === 'Plan to watch') {
-          <button mat-flat-button>
+          <button mat-flat-button (click)="onClickRemoveFromPlan()">
             <mat-icon>undo</mat-icon>
             Remove from plan
           </button>
         }
         @if (mvWatchStatus() === 'Watching') {
-          <button mat-flat-button>
+          <button mat-flat-button (click)="onClickMoveToPlan()">
             <mat-icon>hourglass_empty</mat-icon>
             Move to plan
           </button>
         }
         @if (mvWatchStatus() === 'Watching') {
-          <button mat-flat-button>
+          <button mat-flat-button (click)="onClickCompleted()">
             <mat-icon>check</mat-icon>
             Completed
           </button>
         }
         @if (mvWatchStatus() === 'Completed') {
-          <button mat-flat-button>
+          <button mat-flat-button (click)="onClickRemove()">
             <mat-icon>delete</mat-icon>
             Remove
           </button>

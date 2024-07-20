@@ -1,9 +1,20 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { MediaTVDetailsResponse, MediaTVSeasonResponse, MediaCreditsResponse, MediaTVImagesResponse, MediaTVVideosResponse, MediaMVDetailsResponse, MediaGenre, MediaType, MVWatchStatus, TVWatchStatus } from '../../tmdb.models';
 import {
-  TMDB_IMAGE_ORIGINAL_BASE_URL,
-  TMDB_IMAGE_W500_BASE_URL,
+	MediaTVDetailsResponse,
+	MediaTVSeasonResponse,
+	MediaCreditsResponse,
+	MediaTVImagesResponse,
+	MediaTVVideosResponse,
+	MediaMVDetailsResponse,
+	MediaGenre,
+	MediaType,
+	MVWatchStatus,
+	TVWatchStatus,
+} from '../../tmdb.models';
+import {
+	TMDB_IMAGE_ORIGINAL_BASE_URL,
+	TMDB_IMAGE_W500_BASE_URL,
 } from '../../constants';
 import { TmdbService } from '../../tmdb.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -202,30 +213,47 @@ export class MediaDetailsComponent {
 	}
 
 	protected async onClickPlanToWatch() {
-		const mediaId = this.mediaId();
-		if (mediaId == null) return;
-
-		if (this.mediaType() === MediaType.MOVIE) {
-			if (this.mediaMVDetails == null) return;
-			const movieToAdd = this.createMovieObject(this.mediaMVDetails);
+		if (
+			this.mediaType() === MediaType.MOVIE &&
+			this.mediaMVDetails != null
+		) {
+			const movie = this.createMovieObject(this.mediaMVDetails);
 			await this.userDataService.addMovieToList(
-				'Plan to Watch',
-				movieToAdd
+				MVWatchStatus.PLANTOWATCH,
+				movie
 			);
 		} else if (this.mediaType() === MediaType.TV) {
-			if (this.mediaTVDetails == null) return;
-
-			let tvShowToAdd = new main.TVShow();
-			tvShowToAdd.id = mediaId;
-			tvShowToAdd.name = this.mediaTVDetails.name;
-			tvShowToAdd.poster_path = this.mediaTVDetails.poster_path;
-
-			await this.userDataService.addTVShowToList(
-				'Plan to Watch',
-				tvShowToAdd
-			);
 		}
 	}
+
+	protected async onClickRemoveFromPlan() {
+		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+			const movie = this.createMovieObject(this.mediaMVDetails);
+			await this.userDataService.removeMovieFromList(MVWatchStatus.PLANTOWATCH, movie);
+		}
+	}
+
+	protected async onClickMoveToPlan() {
+		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+			const movie = this.createMovieObject(this.mediaMVDetails);
+			await this.userDataService.moveMovieToList(MVWatchStatus.WATCHING, MVWatchStatus.PLANTOWATCH, movie);
+		}
+	}
+
+	protected async onClickCompleted() {
+		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+			const movie = this.createMovieObject(this.mediaMVDetails);
+			await this.userDataService.moveMovieToList(MVWatchStatus.WATCHING, MVWatchStatus.COMPLETED, movie);
+		}
+	}
+
+	protected async onClickRemove() {
+		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+			const movie = this.createMovieObject(this.mediaMVDetails);
+			await this.userDataService.removeMovieFromList(MVWatchStatus.COMPLETED, movie);
+		}
+	}
+
 
 	// template get functions
 

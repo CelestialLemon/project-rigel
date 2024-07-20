@@ -41,6 +41,16 @@ export class UserDataService {
     await this.getUserDataFromBackend();
   }
 
+  /** Removes the movie item from given list */
+  public async removeMovieFromList(
+    listName: string,
+    movie: main.Movie
+  ) {
+    await RemoveMovieFromList(listName, movie);
+    await this.getUserDataFromBackend();
+  }
+
+  /** Moves a movie item from one list to another */
   public async moveMovieToList(
     previousListName: string,
     newListName: string,
