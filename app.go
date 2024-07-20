@@ -11,9 +11,8 @@ import (
 
 // App struct
 type App struct {
-	isDataSaved bool
-	userData    UserData
-	ctx         context.Context
+	userData UserData
+	ctx      context.Context
 }
 
 // NewApp creates a new App application struct
