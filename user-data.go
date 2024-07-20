@@ -97,7 +97,7 @@ func (ud *UserData) RemoveTVShowFromList(listName string, tvShow TVShow) (succes
 	}
 	listToRemoveFrom.Items = append(
 		listToRemoveFrom.Items[:indexToRemove],
-		listToRemoveFrom.Items[:indexToRemove+1]...,
+		listToRemoveFrom.Items[indexToRemove+1:]...,
 	)
 
 	return true
@@ -176,7 +176,7 @@ func (ud *UserData) RemoveMovieFromList(listName string, movie Movie) (success b
 	}
 	listToRemoveFrom.Items = append(
 		listToRemoveFrom.Items[:indexToRemove],
-		listToRemoveFrom.Items[:indexToRemove+1]...,
+		listToRemoveFrom.Items[indexToRemove+1:]...,
 	)
 
 	return true
