@@ -9,3 +9,19 @@ export function AddMovieToList(arg1, arg2) {
 export function AddTVShowToList(arg1, arg2) {
   return window['go']['main']['UserData']['AddTVShowToList'](arg1, arg2);
 }
+
+export function MoveMovieToList(arg1, arg2, arg3) {
+  return window['go']['main']['UserData']['MoveMovieToList'](arg1, arg2, arg3);
+}
+
+export function MoveTVShowToList(arg1, arg2, arg3) {
+  return window['go']['main']['UserData']['MoveTVShowToList'](arg1, arg2, arg3);
+}
+
+export function RemoveMovieFromList(arg1, arg2) {
+  return window['go']['main']['UserData']['RemoveMovieFromList'](arg1, arg2);
+}
+
+export function RemoveTVShowFromList(arg1, arg2) {
+  return window['go']['main']['UserData']['RemoveTVShowFromList'](arg1, arg2);
+}
