@@ -24,7 +24,7 @@
     <div class="flex gap-4 mb-4">
       @if (mediaType() === 'movie') {
         @if (mvWatchStatus() === 'Unwatched' || mvWatchStatus() === 'Plan to watch') {
-          <button mat-flat-button>
+          <button mat-flat-button (click)="onClickStartWatching()">
             <mat-icon>play_arrow</mat-icon>
             Start Watching
           </button>

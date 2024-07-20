@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { main } from '../../../wailsjs/go/models';
 import { GetUserData, SetUserData } from '../../../wailsjs/go/main/App';
-import { AddMovieToList, AddTVShowToList } from '../../../wailsjs/go/main/UserData';
+import { AddMovieToList, AddTVShowToList, MoveMovieToList, MoveTVShowToList, RemoveMovieFromList, RemoveTVShowFromList } from '../../../wailsjs/go/main/UserData';
 import { BehaviorSubject } from 'rxjs';
 import { MVWatchStatus, TVWatchStatus } from '../tmdb.models';
 
@@ -38,6 +38,15 @@ export class UserDataService {
   /** Adds the given movie item to the given listname */
   public async addMovieToList(listName: string, movie: main.Movie) {
     await AddMovieToList(listName, movie);
+    await this.getUserDataFromBackend();
+  }
+
+  public async moveMovieToList(
+    previousListName: string,
+    newListName: string,
+    movie: main.Movie
+  ) {
+    await MoveMovieToList(previousListName, newListName, movie);
     await this.getUserDataFromBackend();
   }
 
