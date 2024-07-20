@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	inject,
+	signal,
+} from '@angular/core';
 import { UserDataService } from '../../services/user-data.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,39 +16,46 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TMDB_IMAGE_W500_BASE_URL } from '../../constants';
 
 @Component({
-  selector: 'app-lists',
-  standalone: true,
-  imports: [MatExpansionModule, MatIconModule, MatButtonModule, MatTabsModule],
-  templateUrl: './lists.component.html',
-  styleUrl: './lists.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+	selector: 'app-lists',
+	standalone: true,
+	imports: [
+		MatExpansionModule,
+		MatIconModule,
+		MatButtonModule,
+		MatTabsModule,
+	],
+	templateUrl: './lists.component.html',
+	styleUrl: './lists.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListsComponent {
-  // parameters
-  private userDataService = inject(UserDataService);
+	// parameters
+	private userDataService = inject(UserDataService);
 
-  protected mvLists = signal<main.MVWatchList[]>([]);
-  protected tvLists = signal<main.TVWatchList[]>([]);
+	protected mvLists = signal<main.MVWatchList[]>([]);
+	protected tvLists = signal<main.TVWatchList[]>([]);
 
-  private destroy$ = new Subject<void>();
+	private destroy$ = new Subject<void>();
 
-  constructor(private cdr: ChangeDetectorRef) {
-    this.userDataService.userData.pipe(takeUntil(this.destroy$)).subscribe((newUserData) => {
-      this.mvLists.set(newUserData.mvlists);
-      this.tvLists.set(newUserData.tvlists);
-      this.cdr.markForCheck();
-    });
-  }
+	constructor(private cdr: ChangeDetectorRef) {
+		this.userDataService.userData
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((newUserData) => {
+				this.mvLists.set(newUserData.mvlists);
+				this.tvLists.set(newUserData.tvlists);
+				this.cdr.markForCheck();
+			});
+	}
 
-  ngOnInit(): void {}
+	ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+	ngOnDestroy(): void {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
 
-  // template get functions
-  protected get TMDB_IMAGE_W500_BASE_URL(): string {
-    return TMDB_IMAGE_W500_BASE_URL;
-  }
+	// template get functions
+	protected get TMDB_IMAGE_W500_BASE_URL(): string {
+		return TMDB_IMAGE_W500_BASE_URL;
+	}
 }

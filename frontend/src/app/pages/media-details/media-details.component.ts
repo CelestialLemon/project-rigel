@@ -227,33 +227,58 @@ export class MediaDetailsComponent {
 	}
 
 	protected async onClickRemoveFromPlan() {
-		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+		if (
+			this.mediaType() === MediaType.MOVIE &&
+			this.mediaMVDetails != null
+		) {
 			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.removeMovieFromList(MVWatchStatus.PLANTOWATCH, movie);
+			await this.userDataService.removeMovieFromList(
+				MVWatchStatus.PLANTOWATCH,
+				movie
+			);
 		}
 	}
 
 	protected async onClickMoveToPlan() {
-		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+		if (
+			this.mediaType() === MediaType.MOVIE &&
+			this.mediaMVDetails != null
+		) {
 			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.moveMovieToList(MVWatchStatus.WATCHING, MVWatchStatus.PLANTOWATCH, movie);
+			await this.userDataService.moveMovieToList(
+				MVWatchStatus.WATCHING,
+				MVWatchStatus.PLANTOWATCH,
+				movie
+			);
 		}
 	}
 
 	protected async onClickCompleted() {
-		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+		if (
+			this.mediaType() === MediaType.MOVIE &&
+			this.mediaMVDetails != null
+		) {
 			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.moveMovieToList(MVWatchStatus.WATCHING, MVWatchStatus.COMPLETED, movie);
+			await this.userDataService.moveMovieToList(
+				MVWatchStatus.WATCHING,
+				MVWatchStatus.COMPLETED,
+				movie
+			);
 		}
 	}
 
 	protected async onClickRemove() {
-		if (this.mediaType() === MediaType.MOVIE && this.mediaMVDetails != null) {
+		if (
+			this.mediaType() === MediaType.MOVIE &&
+			this.mediaMVDetails != null
+		) {
 			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.removeMovieFromList(MVWatchStatus.COMPLETED, movie);
+			await this.userDataService.removeMovieFromList(
+				MVWatchStatus.COMPLETED,
+				movie
+			);
 		}
 	}
-
 
 	// template get functions
 

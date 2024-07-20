@@ -1,223 +1,289 @@
 <img
-  class="banner-backdrop absolute w-full max-w-full z-0"
-  [src]="backdropUrl"
-  loading="eager"
+	class="banner-backdrop absolute w-full max-w-full z-0"
+	[src]="backdropUrl"
+	loading="eager"
 />
 <div class="h-5/6 w-full p-24 box-border flex gap-12 z-10">
-  <img class="min-w-1/4 shadow-lg shadow-black" [src]="posterUrl" loading="eager" />
-  <div class="flex flex-col">
-    <h1 class="text-8xl text-white mb-8">{{ mediaTitle }} {{ mvWatchStatus() }} {{ tvWatchStatus()}}</h1>
-    <p class="text-white text-lg w-full mb-4 line-clamp-5">
-      {{ mediaOverview }}
-    </p>
+	<img
+		class="min-w-1/4 shadow-lg shadow-black"
+		[src]="posterUrl"
+		loading="eager"
+	/>
+	<div class="flex flex-col">
+		<h1 class="text-8xl text-white mb-8">
+			{{ mediaTitle }} {{ mvWatchStatus() }} {{ tvWatchStatus() }}
+		</h1>
+		<p class="text-white text-lg w-full mb-4 line-clamp-5">
+			{{ mediaOverview }}
+		</p>
 
-    <mat-chip-set class="mb-4" aria-label="media-genre">
-      @for(genre of mediaGenres; track genre) {
-      <mat-chip>{{ genre }}</mat-chip>
-      }
-    </mat-chip-set>
+		<mat-chip-set class="mb-4" aria-label="media-genre">
+			@for (genre of mediaGenres; track genre) {
+				<mat-chip>{{ genre }}</mat-chip>
+			}
+		</mat-chip-set>
 
-    <span class="mb-8 text-lg text-white">
-      Current status: {{ mediaType() === 'movie' ? mvWatchStatus() : tvWatchStatus() }}
-    </span>
+		<span class="mb-8 text-lg text-white">
+			Current status:
+			{{ mediaType() === 'movie' ? mvWatchStatus() : tvWatchStatus() }}
+		</span>
 
-    <div class="flex gap-4 mb-4">
-      @if (mediaType() === 'movie') {
-        @if (mvWatchStatus() === 'Unwatched' || mvWatchStatus() === 'Plan to watch') {
-          <button mat-flat-button (click)="onClickStartWatching()">
-            <mat-icon>play_arrow</mat-icon>
-            Start Watching
-          </button>
-        }
-        @if (mvWatchStatus() === 'Unwatched') {
-          <button mat-flat-button (click)="onClickPlanToWatch()">
-            <mat-icon>schedule</mat-icon>
-            Plan to Watch
-          </button>
-        }
-        @if (mvWatchStatus() === 'Plan to watch') {
-          <button mat-flat-button (click)="onClickRemoveFromPlan()">
-            <mat-icon>undo</mat-icon>
-            Remove from plan
-          </button>
-        }
-        @if (mvWatchStatus() === 'Watching') {
-          <button mat-flat-button (click)="onClickMoveToPlan()">
-            <mat-icon>hourglass_empty</mat-icon>
-            Move to plan
-          </button>
-        }
-        @if (mvWatchStatus() === 'Watching') {
-          <button mat-flat-button (click)="onClickCompleted()">
-            <mat-icon>check</mat-icon>
-            Completed
-          </button>
-        }
-        @if (mvWatchStatus() === 'Completed') {
-          <button mat-flat-button (click)="onClickRemove()">
-            <mat-icon>delete</mat-icon>
-            Remove
-          </button>
-        }
-      }
-    </div>
-  </div>
+		<div class="flex gap-4 mb-4">
+			@if (mediaType() === 'movie') {
+				@if (
+					mvWatchStatus() === 'Unwatched' ||
+					mvWatchStatus() === 'Plan to watch'
+				) {
+					<button mat-flat-button (click)="onClickStartWatching()">
+						<mat-icon>play_arrow</mat-icon>
+						Start Watching
+					</button>
+				}
+				@if (mvWatchStatus() === 'Unwatched') {
+					<button mat-flat-button (click)="onClickPlanToWatch()">
+						<mat-icon>schedule</mat-icon>
+						Plan to Watch
+					</button>
+				}
+				@if (mvWatchStatus() === 'Plan to watch') {
+					<button mat-flat-button (click)="onClickRemoveFromPlan()">
+						<mat-icon>undo</mat-icon>
+						Remove from plan
+					</button>
+				}
+				@if (mvWatchStatus() === 'Watching') {
+					<button mat-flat-button (click)="onClickMoveToPlan()">
+						<mat-icon>hourglass_empty</mat-icon>
+						Move to plan
+					</button>
+				}
+				@if (mvWatchStatus() === 'Watching') {
+					<button mat-flat-button (click)="onClickCompleted()">
+						<mat-icon>check</mat-icon>
+						Completed
+					</button>
+				}
+				@if (mvWatchStatus() === 'Completed') {
+					<button mat-flat-button (click)="onClickRemove()">
+						<mat-icon>delete</mat-icon>
+						Remove
+					</button>
+				}
+			}
+		</div>
+	</div>
 </div>
 <mat-tab-group dynamicHeight>
-  @if (mediaType() === 'tv') {
-  <mat-tab label="Seasons & Episodes">
-    @if (mediaTVDetails != null) {
-    <div class="flex flex-col box-border p-8">
-      <mat-form-field seasonInput class="w-1/4">
-        <mat-label>Select Season</mat-label>
-        <mat-select
-          [(value)]="activeSeasonNumber"
-          (valueChange)="onActiveSeasonChange($event)"
-        >
-          @for (season of mediaTVDetails.seasons; track season.name) {
-          <mat-option [value]="season.season_number">{{
-            season.name
-          }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+	@if (mediaType() === 'tv') {
+		<mat-tab label="Seasons & Episodes">
+			@if (mediaTVDetails != null) {
+				<div class="flex flex-col box-border p-8">
+					<mat-form-field seasonInput class="w-1/4">
+						<mat-label>Select Season</mat-label>
+						<mat-select
+							[(value)]="activeSeasonNumber"
+							(valueChange)="onActiveSeasonChange($event)"
+						>
+							@for (
+								season of mediaTVDetails.seasons;
+								track season.name
+							) {
+								<mat-option [value]="season.season_number">{{
+									season.name
+								}}</mat-option>
+							}
+						</mat-select>
+					</mat-form-field>
 
-      @if (activeSeasonDetails != null) {
-      <div class="flex flex-col gap-8">
-        @for (episode of activeSeasonDetails.episodes; let index = $index; track
-        episode.episode_number) {
-        <div
-          episode-container
-          class="flex w-full p-4 bg-neutral-800 rounded-md gap-8"
-        >
-          <img
-            style="object-fit: cover"
-            class="w-1/4 rounded-md flex-none text-white"
-            [src]="TMDB_IMAGE_W500_BASE_URL + episode.still_path"
-            alt="Episode image not available"
-            loading="lazy"
-          />
-          <div class="flex flex-col w-fit flex-1">
-            <h3 class="text-white text-4xl mb-4">
-              {{ index + 1 }}. {{ episode.name }}
-            </h3>
-            <div class="flex gap-4 mb-4">
-              <mat-chip>{{ episode.air_date }}</mat-chip>
-              <mat-chip>{{ episode.runtime }}M</mat-chip>
-            </div>
-            <p class="text-white">{{ episode.overview }}</p>
-          </div>
-        </div>
-        }
-      </div>
-      }
-    </div>
-    }
-  </mat-tab>
-  }
-  <mat-tab label="Cast & Crew">
-    <mat-tab-group dynamicHeight>
-      <mat-tab label="Cast">
-        @if(creditDetails != null) {
-        <div class="flex flex-row flex-wrap p-8 gap-4 justify-evenly">
-          @for (castEntry of creditDetails.cast; track castEntry.credit_id) {
-          <div class="flex flex-col w-60 bg-gray-800 p-2 gap-2 rounded-md">
-            <img
-              class="rounded-md"
-              [src]="TMDB_IMAGE_W500_BASE_URL + castEntry.profile_path"
-              alt="Cast profile not available"
-              loading="lazy"
-            />
-            <p class="text-white m-0 text-center">{{ castEntry.name }}</p>
-            <p class="text-gray-400 m-0 text-center">
-              {{ castEntry.known_for_department }} as {{ castEntry.character }}
-            </p>
-          </div>
-          }
-        </div>
-        }
-      </mat-tab>
-      <mat-tab label="Crew">
-        @if (creditDetails != null) {
-        <div class="p-8 gap-4">
-          <mat-list>
-            @for(crewEntry of creditDetails.crew; track crewEntry.credit_id) {
-            <mat-list-item>
-              {{ crewEntry.name }} ({{ crewEntry.job }})
-            </mat-list-item>
-            }
-          </mat-list>
-        </div>
-        }
-      </mat-tab>
-    </mat-tab-group>
-  </mat-tab>
-  <mat-tab label="Images">
-    <mat-tab-group>
-      <mat-tab label="Backdrops">
-        @if (imagesDetails != null) {
-        <div class="backdrops-container flex flex-col gap-8 p-8 box-border">
-          @for (backdrop of imagesDetails.backdrops; track backdrop.file_path) {
-          <img
-            class="w-full"
-            [src]="TMDB_IMAGE_ORIGINAL_BASE_URL + backdrop.file_path"
-            alt="backdrop image not available"
-            loading="lazy"
-          />
-          }
-        </div>
-        }
-      </mat-tab>
-      <mat-tab label="Posters">
-        @if (imagesDetails != null) {
-        <div
-          class="posters-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border"
-        >
-          @for (poster of imagesDetails.posters; track poster.file_path) {
-          <img
-            class="w-96"
-            [src]="TMDB_IMAGE_W500_BASE_URL + poster.file_path"
-            alt="backdrop image not available"
-            loading="lazy"
-          />
-          }
-        </div>
-        }
-      </mat-tab>
-      <mat-tab label="Logos">
-        @if (imagesDetails != null) {
-        <div
-          class="posters-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border"
-        >
-          @for (logo of imagesDetails.logos; track logo.file_path) {
-          <img
-            class="w-60"
-            [src]="TMDB_IMAGE_W500_BASE_URL + logo.file_path"
-            alt="backdrop image not available"
-            loading="lazy"
-          />
-          }
-        </div>
-        }
-      </mat-tab>
-    </mat-tab-group>
-  </mat-tab>
-  <mat-tab label="Videos">
-    @if (videosDetails != null) {
-    <div
-      class="videos-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border"
-    >
-      @for (video of videosDetails.results; track video.key) { @if (video.site
-      === 'YouTube') {
-      <iframe
-        width="560"
-        height="315"
-        [src]="getSanitizedUrl('https://www.youtube.com/embed/' + video.key)"
-        frameborder="0"
-        allowfullscreen
-      ></iframe>
-      } }
-    </div>
-    }
-  </mat-tab>
+					@if (activeSeasonDetails != null) {
+						<div class="flex flex-col gap-8">
+							@for (
+								episode of activeSeasonDetails.episodes;
+								let index = $index;
+								track episode.episode_number
+							) {
+								<div
+									episode-container
+									class="flex w-full p-4 bg-neutral-800 rounded-md gap-8"
+								>
+									<img
+										style="object-fit: cover"
+										class="w-1/4 rounded-md flex-none text-white"
+										[src]="
+											TMDB_IMAGE_W500_BASE_URL +
+											episode.still_path
+										"
+										alt="Episode image not available"
+										loading="lazy"
+									/>
+									<div class="flex flex-col w-fit flex-1">
+										<h3 class="text-white text-4xl mb-4">
+											{{ index + 1 }}. {{ episode.name }}
+										</h3>
+										<div class="flex gap-4 mb-4">
+											<mat-chip>{{
+												episode.air_date
+											}}</mat-chip>
+											<mat-chip
+												>{{
+													episode.runtime
+												}}M</mat-chip
+											>
+										</div>
+										<p class="text-white">
+											{{ episode.overview }}
+										</p>
+									</div>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			}
+		</mat-tab>
+	}
+	<mat-tab label="Cast & Crew">
+		<mat-tab-group dynamicHeight>
+			<mat-tab label="Cast">
+				@if (creditDetails != null) {
+					<div
+						class="flex flex-row flex-wrap p-8 gap-4 justify-evenly"
+					>
+						@for (
+							castEntry of creditDetails.cast;
+							track castEntry.credit_id
+						) {
+							<div
+								class="flex flex-col w-60 bg-gray-800 p-2 gap-2 rounded-md"
+							>
+								<img
+									class="rounded-md"
+									[src]="
+										TMDB_IMAGE_W500_BASE_URL +
+										castEntry.profile_path
+									"
+									alt="Cast profile not available"
+									loading="lazy"
+								/>
+								<p class="text-white m-0 text-center">
+									{{ castEntry.name }}
+								</p>
+								<p class="text-gray-400 m-0 text-center">
+									{{ castEntry.known_for_department }} as
+									{{ castEntry.character }}
+								</p>
+							</div>
+						}
+					</div>
+				}
+			</mat-tab>
+			<mat-tab label="Crew">
+				@if (creditDetails != null) {
+					<div class="p-8 gap-4">
+						<mat-list>
+							@for (
+								crewEntry of creditDetails.crew;
+								track crewEntry.credit_id
+							) {
+								<mat-list-item>
+									{{ crewEntry.name }} ({{ crewEntry.job }})
+								</mat-list-item>
+							}
+						</mat-list>
+					</div>
+				}
+			</mat-tab>
+		</mat-tab-group>
+	</mat-tab>
+	<mat-tab label="Images">
+		<mat-tab-group>
+			<mat-tab label="Backdrops">
+				@if (imagesDetails != null) {
+					<div
+						class="backdrops-container flex flex-col gap-8 p-8 box-border"
+					>
+						@for (
+							backdrop of imagesDetails.backdrops;
+							track backdrop.file_path
+						) {
+							<img
+								class="w-full"
+								[src]="
+									TMDB_IMAGE_ORIGINAL_BASE_URL +
+									backdrop.file_path
+								"
+								alt="backdrop image not available"
+								loading="lazy"
+							/>
+						}
+					</div>
+				}
+			</mat-tab>
+			<mat-tab label="Posters">
+				@if (imagesDetails != null) {
+					<div
+						class="posters-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border"
+					>
+						@for (
+							poster of imagesDetails.posters;
+							track poster.file_path
+						) {
+							<img
+								class="w-96"
+								[src]="
+									TMDB_IMAGE_W500_BASE_URL + poster.file_path
+								"
+								alt="backdrop image not available"
+								loading="lazy"
+							/>
+						}
+					</div>
+				}
+			</mat-tab>
+			<mat-tab label="Logos">
+				@if (imagesDetails != null) {
+					<div
+						class="posters-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border"
+					>
+						@for (
+							logo of imagesDetails.logos;
+							track logo.file_path
+						) {
+							<img
+								class="w-60"
+								[src]="
+									TMDB_IMAGE_W500_BASE_URL + logo.file_path
+								"
+								alt="backdrop image not available"
+								loading="lazy"
+							/>
+						}
+					</div>
+				}
+			</mat-tab>
+		</mat-tab-group>
+	</mat-tab>
+	<mat-tab label="Videos">
+		@if (videosDetails != null) {
+			<div
+				class="videos-container flex flex-row flex-wrap justify-evenly gap-8 p-8 box-border"
+			>
+				@for (video of videosDetails.results; track video.key) {
+					@if (video.site === 'YouTube') {
+						<iframe
+							width="560"
+							height="315"
+							[src]="
+								getSanitizedUrl(
+									'https://www.youtube.com/embed/' + video.key
+								)
+							"
+							frameborder="0"
+							allowfullscreen
+						></iframe>
+					}
+				}
+			</div>
+		}
+	</mat-tab>
 </mat-tab-group>

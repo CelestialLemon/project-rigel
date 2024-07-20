@@ -1,13 +1,13 @@
 <mat-toolbar class="toolbar flex-0 flex center-center">
-  <span class="cursor-pointer" (click)="onClickTitle()">Project Rigel</span>
-  <span class="spacer flex-1"></span>
-  <div class="flex gap-2">
-    <button mat-icon-button (click)="onClickLists($event)">
-      <mat-icon>list</mat-icon>
-    </button>
-    <button mat-icon-button (click)="onClickSearchButton()">
-      <mat-icon>search</mat-icon>
-      <app-search-dialog #searchDialog></app-search-dialog>
-    </button>
-  </div>
+	<span class="cursor-pointer" (click)="onClickTitle()">Project Rigel</span>
+	<span class="spacer flex-1"></span>
+	<div class="flex gap-2">
+		<button mat-icon-button (click)="onClickLists($event)">
+			<mat-icon>list</mat-icon>
+		</button>
+		<button mat-icon-button (click)="onClickSearchButton()">
+			<mat-icon>search</mat-icon>
+			<app-search-dialog #searchDialog></app-search-dialog>
+		</button>
+	</div>
 </mat-toolbar>

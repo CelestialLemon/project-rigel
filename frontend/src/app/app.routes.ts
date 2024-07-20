@@ -4,7 +4,7 @@ import { MediaDetailsComponent } from './pages/media-details/media-details.compo
 import { ListsComponent } from './pages/lists/lists.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'media-details', component: MediaDetailsComponent},
-  { path: 'lists', component: ListsComponent }
+	{ path: '', component: HomeComponent },
+	{ path: 'media-details', component: MediaDetailsComponent },
+	{ path: 'lists', component: ListsComponent },
 ];
