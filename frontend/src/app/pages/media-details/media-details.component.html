@@ -11,7 +11,7 @@
 	/>
 	<div class="flex flex-col">
 		<h1 class="text-8xl text-white mb-8">
-			{{ mediaTitle }} {{ mvWatchStatus() }} {{ tvWatchStatus() }}
+			{{ mediaTitle }}
 		</h1>
 		<p class="text-white text-lg w-full mb-4 line-clamp-5">
 			{{ mediaOverview }}
@@ -23,54 +23,70 @@
 			}
 		</mat-chip-set>
 
-		<span class="mb-8 text-lg text-white">
-			Current status:
-			{{ mediaType() === 'movie' ? mvWatchStatus() : tvWatchStatus() }}
-		</span>
-
-		<div class="flex gap-4 mb-4">
-			@if (mediaType() === 'movie') {
-				@if (
-					mvWatchStatus() === 'Unwatched' ||
-					mvWatchStatus() === 'Plan to watch'
-				) {
-					<button mat-flat-button (click)="onClickStartWatching()">
-						<mat-icon>play_arrow</mat-icon>
-						Start Watching
-					</button>
-				}
-				@if (mvWatchStatus() === 'Unwatched') {
-					<button mat-flat-button (click)="onClickPlanToWatch()">
-						<mat-icon>schedule</mat-icon>
-						Plan to Watch
-					</button>
-				}
-				@if (mvWatchStatus() === 'Plan to watch') {
-					<button mat-flat-button (click)="onClickRemoveFromPlan()">
-						<mat-icon>undo</mat-icon>
-						Remove from plan
-					</button>
-				}
-				@if (mvWatchStatus() === 'Watching') {
-					<button mat-flat-button (click)="onClickMoveToPlan()">
-						<mat-icon>hourglass_empty</mat-icon>
-						Move to plan
-					</button>
-				}
-				@if (mvWatchStatus() === 'Watching') {
-					<button mat-flat-button (click)="onClickCompleted()">
-						<mat-icon>check</mat-icon>
-						Completed
-					</button>
-				}
-				@if (mvWatchStatus() === 'Completed') {
-					<button mat-flat-button (click)="onClickRemove()">
-						<mat-icon>delete</mat-icon>
-						Remove
-					</button>
-				}
-			}
-		</div>
+		@if (mediaType() === 'movie') {
+			<form>
+				<mat-form-field>
+					<mat-label>Current Status</mat-label>
+					<mat-select
+						[value]="mvWatchStatus()"
+						(valueChange)="onMVWatchStatusChange($event)"
+					>
+						<mat-option [value]="MVWatchStatus.UNWATCHED">
+							<mat-icon>block</mat-icon>
+							Unwatched
+						</mat-option>
+						<mat-option [value]="MVWatchStatus.PLANTOWATCH">
+							<mat-icon>hourglass_empty</mat-icon>
+							Plan To Watch
+						</mat-option>
+						<mat-option [value]="MVWatchStatus.WATCHING">
+							<mat-icon>play_arrow</mat-icon>
+							Watching
+						</mat-option>
+						<mat-option [value]="MVWatchStatus.COMPLETED">
+							<mat-icon>check</mat-icon>
+							Completed
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</form>
+		} @else if (mediaType() === 'tv') {
+			<form>
+				<mat-form-field>
+					<mat-label>Current Status</mat-label>
+					<mat-select
+						[value]="tvWatchStatus()"
+						(valueChange)="onTVWatchStatusChange($event)"
+						panelClass="custom-select-panel"
+					>
+						<mat-option [value]="TVWatchStatus.UNWATCHED">
+							<mat-icon>close</mat-icon>
+							Unwatched
+						</mat-option>
+						<mat-option [value]="TVWatchStatus.PLANTOWATCH">
+							<mat-icon>hourglass_empty</mat-icon>
+							Plan To Watch
+						</mat-option>
+						<mat-option [value]="TVWatchStatus.WATCHING">
+							<mat-icon>play_arrow</mat-icon>
+							Watching
+						</mat-option>
+						<mat-option [value]="TVWatchStatus.ONHOLD">
+							<mat-icon>pause</mat-icon>
+							On Hold
+						</mat-option>
+						<mat-option [value]="TVWatchStatus.DROPPED">
+							<mat-icon>stop</mat-icon>
+							Dropped
+						</mat-option>
+						<mat-option [value]="TVWatchStatus.COMPLETED">
+							<mat-icon>check</mat-icon>
+							Completed
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</form>
+		}
 	</div>
 </div>
 <mat-tab-group dynamicHeight>

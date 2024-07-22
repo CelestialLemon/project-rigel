@@ -15,3 +15,8 @@
 
 	overflow-x: hidden;
 }
+
+::ng-deep .custom-select-panel {
+	box-sizing: border-box;
+	min-height: 316px;
+}

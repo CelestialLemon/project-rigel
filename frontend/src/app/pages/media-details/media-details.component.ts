@@ -46,6 +46,8 @@ import { Subject, takeUntil } from 'rxjs';
 		MatInputModule,
 		FormsModule,
 		MatListModule,
+		MatFormFieldModule,
+		MatSelectModule,
 	],
 	providers: [TmdbService],
 	templateUrl: './media-details.component.html',
@@ -183,101 +185,39 @@ export class MediaDetailsComponent {
 			);
 	}
 
-	protected async onClickStartWatching() {
-		if (
-			this.mediaType() === MediaType.MOVIE &&
-			this.mediaMVDetails != null
-		) {
-			// create the movie object
-			const movie = this.createMovieObject(this.mediaMVDetails);
-			if (this.mvWatchStatus() === MVWatchStatus.PLANTOWATCH) {
-				this.userDataService.moveMovieToList(
-					MVWatchStatus.PLANTOWATCH,
-					MVWatchStatus.WATCHING,
-					movie
-				);
-			} else if (this.mvWatchStatus() === MVWatchStatus.UNWATCHED) {
-				this.userDataService.addMovieToList(
-					MVWatchStatus.WATCHING,
-					movie
-				);
-			} else {
-				console.error('Cannot move from list');
-			}
-		} else if (
-			this.mediaType() === MediaType.TV &&
-			this.mediaTVDetails != null
-		) {
-			// create the tvshow object
+	protected async onMVWatchStatusChange(newStatus: MVWatchStatus) {
+		if (this.mediaMVDetails == null) return;
+
+		const movie = this.createMovieObject(this.mediaMVDetails);
+		switch (newStatus) {
+			case MVWatchStatus.UNWATCHED:
+				if (newStatus === MVWatchStatus.UNWATCHED) {
+					this.userDataService.moveMovieToList(
+						this.mvWatchStatus(),
+						newStatus,
+						movie
+					);
+				}
+				break;
+
+			case MVWatchStatus.PLANTOWATCH:
+			case MVWatchStatus.COMPLETED:
+			case MVWatchStatus.WATCHING:
+				if (this.mvWatchStatus() === MVWatchStatus.UNWATCHED) {
+					this.userDataService.addMovieToList(newStatus, movie);
+				} else {
+					this.userDataService.moveMovieToList(
+						this.mvWatchStatus(),
+						newStatus,
+						movie
+					);
+				}
+				break;
 		}
 	}
 
-	protected async onClickPlanToWatch() {
-		if (
-			this.mediaType() === MediaType.MOVIE &&
-			this.mediaMVDetails != null
-		) {
-			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.addMovieToList(
-				MVWatchStatus.PLANTOWATCH,
-				movie
-			);
-		} else if (this.mediaType() === MediaType.TV) {
-		}
-	}
-
-	protected async onClickRemoveFromPlan() {
-		if (
-			this.mediaType() === MediaType.MOVIE &&
-			this.mediaMVDetails != null
-		) {
-			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.removeMovieFromList(
-				MVWatchStatus.PLANTOWATCH,
-				movie
-			);
-		}
-	}
-
-	protected async onClickMoveToPlan() {
-		if (
-			this.mediaType() === MediaType.MOVIE &&
-			this.mediaMVDetails != null
-		) {
-			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.moveMovieToList(
-				MVWatchStatus.WATCHING,
-				MVWatchStatus.PLANTOWATCH,
-				movie
-			);
-		}
-	}
-
-	protected async onClickCompleted() {
-		if (
-			this.mediaType() === MediaType.MOVIE &&
-			this.mediaMVDetails != null
-		) {
-			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.moveMovieToList(
-				MVWatchStatus.WATCHING,
-				MVWatchStatus.COMPLETED,
-				movie
-			);
-		}
-	}
-
-	protected async onClickRemove() {
-		if (
-			this.mediaType() === MediaType.MOVIE &&
-			this.mediaMVDetails != null
-		) {
-			const movie = this.createMovieObject(this.mediaMVDetails);
-			await this.userDataService.removeMovieFromList(
-				MVWatchStatus.COMPLETED,
-				movie
-			);
-		}
+	protected async onTVWatchStatusChange(newStatus: TVWatchStatus) {
+		if (this.mediaTVDetails == null) return;
 	}
 
 	// template get functions
@@ -365,6 +305,14 @@ export class MediaDetailsComponent {
 		}
 
 		return TMDB_IMAGE_ORIGINAL_BASE_URL + backdrop_path;
+	}
+
+	public get MVWatchStatus() {
+		return MVWatchStatus;
+	}
+
+	public get TVWatchStatus() {
+		return TVWatchStatus;
 	}
 
 	protected get TMDB_IMAGE_ORIGINAL_BASE_URL(): string {
