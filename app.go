@@ -53,6 +53,11 @@ func (a *App) SetUserData(newUserData UserData) {
 	WriteUserData(newUserData)
 }
 
+func (a *App) SaveUserData() {
+	runtime.LogDebug(a.ctx, "Backend call | SaveUserData")
+	WriteUserData(a.userData)
+}
+
 // -------------------------------------------------------------------------------------------
 // user data file utility functions
 

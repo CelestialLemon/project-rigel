@@ -10,6 +10,10 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function SaveUserData() {
+  return window['go']['main']['App']['SaveUserData']();
+}
+
 export function SetUserData(arg1) {
   return window['go']['main']['App']['SetUserData'](arg1);
 }

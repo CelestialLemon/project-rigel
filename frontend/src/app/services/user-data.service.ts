@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { main } from '../../../wailsjs/go/models';
-import { GetUserData, SetUserData } from '../../../wailsjs/go/main/App';
+import {
+	GetUserData,
+	SaveUserData,
+	SetUserData,
+} from '../../../wailsjs/go/main/App';
 import {
 	AddMovieToList,
 	AddTVShowToList,
@@ -40,12 +44,14 @@ export class UserDataService {
 	public async addTVShowToList(listName: string, tvShow: main.TVShow) {
 		await AddTVShowToList(listName, tvShow);
 		await this.getUserDataFromBackend();
+		await SaveUserData();
 	}
 
 	/** Removes the tv show item from given list */
 	public async removeTVShowFromList(listName: string, tvShow: main.TVShow) {
 		await this.removeTVShowFromList(listName, tvShow);
 		await this.getUserDataFromBackend();
+		await SaveUserData();
 	}
 
 	/** Moves a tv show item from one list to another */
@@ -56,18 +62,21 @@ export class UserDataService {
 	) {
 		await MoveTVShowToList(previousListName, newListName, tvShow);
 		await this.getUserDataFromBackend();
+		await SaveUserData();
 	}
 
 	/** Adds the given movie item to the given listname */
 	public async addMovieToList(listName: string, movie: main.Movie) {
 		await AddMovieToList(listName, movie);
 		await this.getUserDataFromBackend();
+		await SaveUserData();
 	}
 
 	/** Removes the movie item from given list */
 	public async removeMovieFromList(listName: string, movie: main.Movie) {
 		await RemoveMovieFromList(listName, movie);
 		await this.getUserDataFromBackend();
+		await SaveUserData();
 	}
 
 	/** Moves a movie item from one list to another */
@@ -78,6 +87,7 @@ export class UserDataService {
 	) {
 		await MoveMovieToList(previousListName, newListName, movie);
 		await this.getUserDataFromBackend();
+		await SaveUserData();
 	}
 
 	/** Gets the status of the movie given its id */
