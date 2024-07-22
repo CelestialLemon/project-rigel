@@ -42,6 +42,22 @@ export class UserDataService {
 		await this.getUserDataFromBackend();
 	}
 
+	/** Removes the tv show item from given list */
+	public async removeTVShowFromList(listName: string, tvShow: main.TVShow) {
+		await this.removeTVShowFromList(listName, tvShow);
+		await this.getUserDataFromBackend();
+	}
+
+	/** Moves a tv show item from one list to another */
+	public async moveTVShowToList(
+		previousListName: string,
+		newListName: string,
+		tvShow: main.TVShow
+	) {
+		await MoveTVShowToList(previousListName, newListName, tvShow);
+		await this.getUserDataFromBackend();
+	}
+
 	/** Adds the given movie item to the given listname */
 	public async addMovieToList(listName: string, movie: main.Movie) {
 		await AddMovieToList(listName, movie);

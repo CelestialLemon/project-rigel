@@ -185,19 +185,20 @@ export class MediaDetailsComponent {
 			);
 	}
 
+	/** Handles updates of watch status by user */
+	// newStatus as suggests is the new status set by user
+	// this.mvWatchStatus() is the current (now old) watch status
+	// newStatus is guaranteed to be different from current status
 	protected async onMVWatchStatusChange(newStatus: MVWatchStatus) {
 		if (this.mediaMVDetails == null) return;
 
 		const movie = this.createMovieObject(this.mediaMVDetails);
 		switch (newStatus) {
 			case MVWatchStatus.UNWATCHED:
-				if (newStatus === MVWatchStatus.UNWATCHED) {
-					this.userDataService.moveMovieToList(
-						this.mvWatchStatus(),
-						newStatus,
-						movie
-					);
-				}
+				this.userDataService.removeMovieFromList(
+					this.mvWatchStatus(),
+					movie
+				);
 				break;
 
 			case MVWatchStatus.PLANTOWATCH:
@@ -216,8 +217,37 @@ export class MediaDetailsComponent {
 		}
 	}
 
+	/** Handles updates of watch status by user */
+	// newStatus as suggests is the new status set by user
+	// this.mvWatchStatus() is the current (now old) watch status
+	// newStatus is guaranteed to be different from current status
 	protected async onTVWatchStatusChange(newStatus: TVWatchStatus) {
 		if (this.mediaTVDetails == null) return;
+
+		const tvShow = this.createTVShowObject(this.mediaTVDetails);
+		switch (newStatus) {
+			case TVWatchStatus.UNWATCHED:
+				this.userDataService.removeTVShowFromList(
+					this.tvWatchStatus(),
+					tvShow
+				);
+				break;
+
+			case TVWatchStatus.PLANTOWATCH:
+			case TVWatchStatus.WATCHING:
+			case TVWatchStatus.ONHOLD:
+			case TVWatchStatus.DROPPED:
+			case TVWatchStatus.COMPLETED:
+				if (this.tvWatchStatus() === TVWatchStatus.UNWATCHED) {
+					this.userDataService.addTVShowToList(newStatus, tvShow);
+				} else {
+					this.userDataService.moveTVShowToList(
+						this.tvWatchStatus(),
+						newStatus,
+						tvShow
+					);
+				}
+		}
 	}
 
 	// template get functions
@@ -345,10 +375,24 @@ export class MediaDetailsComponent {
 	private createMovieObject(
 		mediaMVDetails: MediaMVDetailsResponse
 	): main.Movie {
-		let movieToAdd = new main.Movie();
-		movieToAdd.id = mediaMVDetails.id.toString();
-		movieToAdd.name = mediaMVDetails.title;
-		movieToAdd.poster_path = mediaMVDetails.poster_path;
-		return movieToAdd;
+		let movie = new main.Movie();
+		movie.id = mediaMVDetails.id.toString();
+		movie.name = mediaMVDetails.title;
+		movie.poster_path = mediaMVDetails.poster_path;
+		return movie;
+	}
+
+	/**
+	 * Creates a main.TVShow object given current media details
+	 * @returns created tv show object
+	 */
+	private createTVShowObject(
+		mediaTVDetails: MediaTVDetailsResponse
+	): main.TVShow {
+		let tvShow = new main.TVShow();
+		tvShow.id = mediaTVDetails.id.toString();
+		tvShow.name = mediaTVDetails.name;
+		tvShow.poster_path = mediaTVDetails.poster_path;
+		return tvShow;
 	}
 }
