@@ -12,7 +12,9 @@
 								<mat-panel-description> </mat-panel-description>
 							</mat-expansion-panel-header>
 
-							<div class="flex flex-row gap-8 mx-8 items-stretch">
+							<div
+								class="flex flex-row flex-wrap box-border gap-8 mx-8 items-stretch"
+							>
 								@for (movie of list.items; track movie.name) {
 									<div class="w-64 flex flex-col gap-4">
 										<img
@@ -47,7 +49,9 @@
 								<mat-panel-description> </mat-panel-description>
 							</mat-expansion-panel-header>
 
-							<div class="flex flex-row gap-8 mx-8 items-stretch">
+							<div
+								class="flex flex-row flex-wrap box-border gap-8 mx-8 items-stretch"
+							>
 								@for (tvShow of list.items; track tvShow.name) {
 									<div class="w-64 flex flex-col gap-4">
 										<img
