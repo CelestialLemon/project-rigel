@@ -1,9 +1,10 @@
 export namespace main {
 	
 	export class Movie {
-	    id: string;
+	    id: number;
 	    name: string;
 	    poster_path: string;
+	    watch_status: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Movie(source);
@@ -14,14 +15,15 @@ export namespace main {
 	        this.id = source["id"];
 	        this.name = source["name"];
 	        this.poster_path = source["poster_path"];
+	        this.watch_status = source["watch_status"];
 	    }
 	}
-	export class MVWatchList {
+	export class MovieList {
 	    name: string;
 	    items: Movie[];
 	
 	    static createFrom(source: any = {}) {
-	        return new MVWatchList(source);
+	        return new MovieList(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -48,11 +50,11 @@ export namespace main {
 		    return a;
 		}
 	}
-	
 	export class TVShow {
-	    id: string;
+	    id: number;
 	    name: string;
 	    poster_path: string;
+	    watch_status: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new TVShow(source);
@@ -63,14 +65,15 @@ export namespace main {
 	        this.id = source["id"];
 	        this.name = source["name"];
 	        this.poster_path = source["poster_path"];
+	        this.watch_status = source["watch_status"];
 	    }
 	}
-	export class TVWatchList {
+	export class TVShowList {
 	    name: string;
 	    items: TVShow[];
 	
 	    static createFrom(source: any = {}) {
-	        return new TVWatchList(source);
+	        return new TVShowList(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -98,8 +101,8 @@ export namespace main {
 		}
 	}
 	export class UserData {
-	    tvlists: TVWatchList[];
-	    mvlists: MVWatchList[];
+	    tv_shows: {[key: number]: TVShow};
+	    movies: {[key: number]: Movie};
 	
 	    static createFrom(source: any = {}) {
 	        return new UserData(source);
@@ -107,8 +110,8 @@ export namespace main {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.tvlists = this.convertValues(source["tvlists"], TVWatchList);
-	        this.mvlists = this.convertValues(source["mvlists"], MVWatchList);
+	        this.tv_shows = this.convertValues(source["tv_shows"], TVShow, true);
+	        this.movies = this.convertValues(source["movies"], Movie, true);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

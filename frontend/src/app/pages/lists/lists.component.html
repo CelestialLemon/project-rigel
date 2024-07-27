@@ -3,7 +3,7 @@
 		<mat-tab label="Movies">
 			<div class="mt-4">
 				<mat-accordion [displayMode]="'flat'" [multi]="true">
-					@for (list of mvLists(); track list.name) {
+					@for (list of mvStatusLists(); track list.name) {
 						<mat-expansion-panel>
 							<mat-expansion-panel-header>
 								<mat-panel-title>{{
@@ -40,7 +40,7 @@
 		<mat-tab label="TV Shows">
 			<div class="mt-4">
 				<mat-accordion [displayMode]="'flat'" [multi]="true">
-					@for (list of tvLists(); track list.name) {
+					@for (list of tvStatusLists(); track list.name) {
 						<mat-expansion-panel>
 							<mat-expansion-panel-header>
 								<mat-panel-title>{{

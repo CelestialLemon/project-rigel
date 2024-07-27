@@ -54,35 +54,12 @@ import { Subject, takeUntil } from 'rxjs';
 	styleUrl: './media-details.component.scss',
 })
 export class MediaDetailsComponent {
-	protected mediaId = signal<string | null>(null);
+	protected mediaId = signal<number>(0);
 	protected mediaType = signal<MediaType>(MediaType.MOVIE);
-
-	// signal to be updated when user data from service changes
-	// will be used to trigger computed signals that should be recomputed on data update
-	// not sure if this is the best approach tho
 	protected userDataUpdate = signal(0);
-
-	protected mvWatchStatus = computed(() => {
-		// call this here to allow this computed signal to trigger on data update
-		this.userDataUpdate();
-
-		if (this.mediaType() === MediaType.MOVIE) {
-			return this.userDataService.getMovieStatus(this.mediaId() ?? '');
-		} else {
-			return MVWatchStatus.UNWATCHED;
-		}
-	});
-
-	protected tvWatchStatus = computed(() => {
-		// call this here to allow this computed signal to trigger on data update
-		this.userDataUpdate();
-
-		if (this.mediaType() === MediaType.TV) {
-			return this.userDataService.getTVShowStatus(this.mediaId() ?? '');
-		} else {
-			return TVWatchStatus.UNWATCHED;
-		}
-	});
+	protected watchStatus = signal<MVWatchStatus | TVWatchStatus>(
+		TVWatchStatus.UNWATCHED
+	);
 
 	protected mediaTVDetails: MediaTVDetailsResponse | null = null;
 	protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
@@ -105,15 +82,18 @@ export class MediaDetailsComponent {
 	) {}
 
 	ngOnInit() {
-		this.route.queryParamMap.subscribe((params) => {
-			this.handleParamsUpdate(params);
-		});
+		this.route.queryParamMap
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((params) => {
+				this.handleParamsUpdate(params);
+			});
 
 		this.userDataService.userData
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(() => {
 				this.userDataUpdate.set(this.userDataUpdate() + 1);
 			});
+		this.getMediaWatchStatus();
 	}
 
 	ngOnDestroy() {
@@ -134,7 +114,7 @@ export class MediaDetailsComponent {
 		}
 
 		// get media id
-		this.mediaId.set(params.get('id'));
+		this.mediaId.set(Number.parseInt(params.get('id') ?? '0'));
 		const mediaId = this.mediaId();
 		const mediaType = this.mediaType();
 		// if both params are present fetch the media details
@@ -172,6 +152,22 @@ export class MediaDetailsComponent {
 		}
 	}
 
+	private async getMediaWatchStatus() {
+		let watchStatus: TVWatchStatus | MVWatchStatus =
+			TVWatchStatus.UNWATCHED;
+		if (this.mediaType() === MediaType.MOVIE) {
+			watchStatus = (await this.userDataService.getMovieWatchStatus(
+				this.mediaId()
+			)) as MVWatchStatus;
+		} else if (this.mediaType() === MediaType.TV) {
+			watchStatus = (await this.userDataService.getTVShowWatchStatus(
+				this.mediaId()
+			)) as TVWatchStatus;
+		}
+
+		this.watchStatus.set(watchStatus);
+	}
+
 	// event function
 
 	protected async onActiveSeasonChange(newActiveSeason: number) {
@@ -192,29 +188,9 @@ export class MediaDetailsComponent {
 	protected async onMVWatchStatusChange(newStatus: MVWatchStatus) {
 		if (this.mediaMVDetails == null) return;
 
+		this.watchStatus.set(newStatus);
 		const movie = this.createMovieObject(this.mediaMVDetails);
-		switch (newStatus) {
-			case MVWatchStatus.UNWATCHED:
-				this.userDataService.removeMovieFromList(
-					this.mvWatchStatus(),
-					movie
-				);
-				break;
-
-			case MVWatchStatus.PLANTOWATCH:
-			case MVWatchStatus.COMPLETED:
-			case MVWatchStatus.WATCHING:
-				if (this.mvWatchStatus() === MVWatchStatus.UNWATCHED) {
-					this.userDataService.addMovieToList(newStatus, movie);
-				} else {
-					this.userDataService.moveMovieToList(
-						this.mvWatchStatus(),
-						newStatus,
-						movie
-					);
-				}
-				break;
-		}
+		this.userDataService.updateMovieWatchStatus(movie, newStatus);
 	}
 
 	/** Handles updates of watch status by user */
@@ -223,31 +199,9 @@ export class MediaDetailsComponent {
 	// newStatus is guaranteed to be different from current status
 	protected async onTVWatchStatusChange(newStatus: TVWatchStatus) {
 		if (this.mediaTVDetails == null) return;
-
+		this.watchStatus.set(newStatus);
 		const tvShow = this.createTVShowObject(this.mediaTVDetails);
-		switch (newStatus) {
-			case TVWatchStatus.UNWATCHED:
-				this.userDataService.removeTVShowFromList(
-					this.tvWatchStatus(),
-					tvShow
-				);
-				break;
-
-			case TVWatchStatus.PLANTOWATCH:
-			case TVWatchStatus.WATCHING:
-			case TVWatchStatus.ONHOLD:
-			case TVWatchStatus.DROPPED:
-			case TVWatchStatus.COMPLETED:
-				if (this.tvWatchStatus() === TVWatchStatus.UNWATCHED) {
-					this.userDataService.addTVShowToList(newStatus, tvShow);
-				} else {
-					this.userDataService.moveTVShowToList(
-						this.tvWatchStatus(),
-						newStatus,
-						tvShow
-					);
-				}
-		}
+		this.userDataService.updateTVShowWatchStatus(tvShow, newStatus);
 	}
 
 	// template get functions
@@ -376,7 +330,7 @@ export class MediaDetailsComponent {
 		mediaMVDetails: MediaMVDetailsResponse
 	): main.Movie {
 		let movie = new main.Movie();
-		movie.id = mediaMVDetails.id.toString();
+		movie.id = mediaMVDetails.id;
 		movie.name = mediaMVDetails.title;
 		movie.poster_path = mediaMVDetails.poster_path;
 		return movie;
@@ -390,7 +344,7 @@ export class MediaDetailsComponent {
 		mediaTVDetails: MediaTVDetailsResponse
 	): main.TVShow {
 		let tvShow = new main.TVShow();
-		tvShow.id = mediaTVDetails.id.toString();
+		tvShow.id = mediaTVDetails.id;
 		tvShow.name = mediaTVDetails.name;
 		tvShow.poster_path = mediaTVDetails.poster_path;
 		return tvShow;

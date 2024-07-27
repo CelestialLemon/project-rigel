@@ -28,7 +28,7 @@
 				<mat-form-field>
 					<mat-label>Current Status</mat-label>
 					<mat-select
-						[value]="mvWatchStatus()"
+						[value]="watchStatus()"
 						(valueChange)="onMVWatchStatusChange($event)"
 					>
 						<mat-option [value]="MVWatchStatus.UNWATCHED">
@@ -55,7 +55,7 @@
 				<mat-form-field>
 					<mat-label>Current Status</mat-label>
 					<mat-select
-						[value]="tvWatchStatus()"
+						[value]="watchStatus()"
 						(valueChange)="onTVWatchStatusChange($event)"
 						panelClass="custom-select-panel"
 					>

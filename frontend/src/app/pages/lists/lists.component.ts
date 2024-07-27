@@ -32,17 +32,21 @@ export class ListsComponent {
 	// parameters
 	private userDataService = inject(UserDataService);
 
-	protected mvLists = signal<main.MVWatchList[]>([]);
-	protected tvLists = signal<main.TVWatchList[]>([]);
+	protected mvStatusLists = signal<main.MovieList[]>([]);
+	protected tvStatusLists = signal<main.TVShowList[]>([]);
 
 	private destroy$ = new Subject<void>();
 
 	constructor(private cdr: ChangeDetectorRef) {
 		this.userDataService.userData
 			.pipe(takeUntil(this.destroy$))
-			.subscribe((newUserData) => {
-				this.mvLists.set(newUserData.mvlists);
-				this.tvLists.set(newUserData.tvlists);
+			.subscribe(async () => {
+				this.mvStatusLists.set(
+					await this.userDataService.getMoviesStatusLists()
+				);
+				this.tvStatusLists.set(
+					await this.userDataService.getTVShowsStatusLists()
+				);
 				this.cdr.markForCheck();
 			});
 	}

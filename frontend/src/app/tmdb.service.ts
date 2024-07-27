@@ -39,7 +39,7 @@ export class TmdbService {
 	}
 
 	async getMediaDetails(
-		mediaId: string,
+		mediaId: number,
 		mediaType: MediaType
 	): Promise<MediaTVDetailsResponse | MediaMVDetailsResponse> {
 		const headers = new HttpHeaders({
@@ -57,7 +57,7 @@ export class TmdbService {
 		return res;
 	}
 
-	async getMediaTVSeasonDetails(mediaId: string, seasonNumber: number = 1) {
+	async getMediaTVSeasonDetails(mediaId: number, seasonNumber: number = 1) {
 		const headers = new HttpHeaders({
 			Authorization: `Bearer ${TMDB_API_KEY}`,
 			accept: `application/json`,
@@ -74,7 +74,7 @@ export class TmdbService {
 		return res;
 	}
 
-	async getMediaCreditsDetails(mediaId: string, mediaType: MediaType) {
+	async getMediaCreditsDetails(mediaId: number, mediaType: MediaType) {
 		const headers = new HttpHeaders({
 			Authorization: `Bearer ${TMDB_API_KEY}`,
 			accept: `application/json`,
@@ -91,7 +91,7 @@ export class TmdbService {
 		return res;
 	}
 
-	async getMediaImagesDetails(mediaId: string, mediaType: MediaType) {
+	async getMediaImagesDetails(mediaId: number, mediaType: MediaType) {
 		const headers = new HttpHeaders({
 			Authorization: `Bearer ${TMDB_API_KEY}`,
 			accept: `application/json`,
@@ -107,7 +107,7 @@ export class TmdbService {
 		return res;
 	}
 
-	async getMediaVideosDetails(mediaId: string, mediaType: MediaType) {
+	async getMediaVideosDetails(mediaId: number, mediaType: MediaType) {
 		const headers = new HttpHeaders({
 			Authorization: `Bearer ${TMDB_API_KEY}`,
 			accept: `application/json`,
