@@ -211,3 +211,47 @@ func (ud *UserData) GetTVShowsStatusLists()([]TVShowList) {
 
 	return lists;
 }
+
+func (ud *UserData) GetCustomMoviesLists() []MovieList {
+	listsMap := map[string][]Movie {};
+
+	for k := range ud.MoviesLists {
+		listsMap[k] = []Movie{};
+	}
+
+	for _, movie := range ud.Movies {
+		for listName := range movie.Lists {
+			listsMap[listName] = append(listsMap[listName], movie);
+		}
+	}
+
+	lists := []MovieList{}
+
+	for listName, listItems := range listsMap {
+		lists = append(lists, MovieList{ Name: listName, Items: listItems });
+	}
+
+	return lists;
+}
+
+func (ud *UserData) GetCustomTVShowsLists() []TVShowList {
+	listsMap := map[string][]TVShow {};
+
+	for k := range ud.TVShowsLists {
+		listsMap[k] = []TVShow{};
+	}
+
+	for _, tvShow := range ud.TVShows {
+		for listName := range tvShow.Lists {
+			listsMap[listName] = append(listsMap[listName], tvShow);
+		}
+	}
+
+	lists := []TVShowList{}
+
+	for listName, listItems := range listsMap {
+		lists = append(lists, TVShowList{ Name: listName, Items: listItems });
+	}
+
+	return lists;
+}

@@ -121,6 +121,8 @@ func getDefaultUserData() UserData {
 	defaultData := UserData{
 		TVShows: defaultTVShows,
 		Movies: defaultMVLists,
+		MoviesLists: map[string]bool{},
+		TVShowsLists: map[string]bool{},
 	}
 
 	return defaultData
