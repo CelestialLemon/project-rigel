@@ -37,6 +37,10 @@ type Movie struct {
 	Name       string `json:"name"`
 	PosterPath string `json:"poster_path"`
 	WatchStatus string `json:"watch_status"`
+	// name of custom lists the item is part of
+	// using a map with bool instead of set
+	// because set doesn't exist in go 
+	Lists map[string]bool `json:"lists"`
 }
 
 type MovieList struct {
@@ -60,11 +64,25 @@ func (m *Movie) updateWatchStatus(newWatchStatus string) {
 	m.WatchStatus = newWatchStatus;
 }
 
+func (m *Movie) addList(listName string) {
+	_, exists := m.Lists[listName];
+
+	if exists {
+		fmt.Println("List already exists for movie: ", m);
+	} else {
+		m.Lists[listName] = true;
+	}
+}
+
 type TVShow struct {
 	Id         uint `json:"id"`
 	Name       string `json:"name"`
 	PosterPath string `json:"poster_path"`
 	WatchStatus string `json:"watch_status"`
+	// name of custom lists the item is part of
+	// using a map with bool instead of set
+	// because set doesn't exist in go 
+	Lists map[string]bool `json:"lists"`
 }
 
 type TVShowList struct {
@@ -88,19 +106,39 @@ func (t *TVShow) updateWatchStatus(newWatchStatus string) {
 	t.WatchStatus = newWatchStatus;
 }
 
+func (t *TVShow) addList(listName string) {
+	_, exists := t.Lists[listName];
+
+	if exists {
+		fmt.Println("List already exists for movie: ", t);
+	} else {
+		t.Lists[listName] = true;
+	}
+}
+
+
 type UserData struct {
 	TVShows map[uint]TVShow `json:"tv_shows"`
 	Movies map[uint]Movie `json:"movies"`
+	// custom lists created by user
+	MoviesLists map[string]bool `json:"movies_lists`
+	TVShowsLists map[string]bool `json:"tv_shows_lists`
 }
 
 func (ud *UserData) UpdateMovieWatchStatus(movie Movie, newWatchStatus string) {
 	movie.updateWatchStatus(newWatchStatus);
+	// if item exists update else creates new item
 	ud.Movies[movie.Id] = movie;
+
+	WriteUserData(*ud);
 }
 
 func (ud *UserData) UpdateTVShowWatchStatus(tvShow TVShow, newWatchStatus string) {
 	tvShow.updateWatchStatus(newWatchStatus);
+	// if item exists update else creates new item
 	ud.TVShows[tvShow.Id] = tvShow;
+
+	WriteUserData(*ud);
 }
 
 func (ud *UserData) GetMovieWatchStatus(movieId uint) (string) {
@@ -122,6 +160,19 @@ func (ud *UserData) GetTVShowWatchStatus(tvShowId uint) (string) {
 		return UNWATCHED;
 	}
 }
+
+func (ud *UserData) AddMovieToList(movie Movie, listName string) {
+	movie.addList(listName);
+	ud.MoviesLists[listName] = true;
+	WriteUserData(*ud);
+}
+
+func (ud *UserData) AddTVShowToList(tvShow TVShow, listName string) {
+	tvShow.addList(listName);
+	ud.TVShowsLists[listName] = true;
+	WriteUserData(*ud);
+}
+
 
 func (ud *UserData) GetMoviesStatusLists()([]MovieList) {
 	lists := []MovieList {
@@ -160,163 +211,3 @@ func (ud *UserData) GetTVShowsStatusLists()([]TVShowList) {
 
 	return lists;
 }
-
-
-// func (ud *UserData) AddTVShowToList(listName string, tvShow TVShow) (success bool) {
-// 	fmt.Println("Adding TV Show to list")
-// 	fmt.Println("listName: ", listName, ", tvShow: ", tvShow)
-
-// 	var listToAddTo *TVWatchList = nil
-
-// 	for i, list := range ud.TVLists {
-// 		if list.Name == listName {
-// 			listToAddTo = &ud.TVLists[i]
-// 		}
-// 	}
-
-// 	if listToAddTo == nil {
-// 		fmt.Println("ERROR: List does not exist")
-// 		return false
-// 	}
-
-// 	alreadyExists := false
-
-// 	for _, item := range listToAddTo.Items {
-// 		if item.Id == tvShow.Id {
-// 			alreadyExists = true
-// 		}
-// 	}
-
-// 	if alreadyExists {
-// 		fmt.Println("ERROR: Show already exists in the list")
-// 		return false
-// 	}
-
-// 	listToAddTo.Items = append(listToAddTo.Items, tvShow)
-
-// 	return true
-// }
-
-// func (ud *UserData) RemoveTVShowFromList(listName string, tvShow TVShow) (success bool) {
-// 	fmt.Println("RemoveTVShowFromList, listName: ", listName, " tvShow: ", tvShow)
-
-// 	var listToRemoveFrom *TVWatchList = nil
-// 	for i, list := range ud.TVLists {
-// 		if list.Name == listName {
-// 			listToRemoveFrom = &ud.TVLists[i]
-// 			break
-// 		}
-// 	}
-// 	if listToRemoveFrom == nil {
-// 		fmt.Println("ERROR: Cannot find list: ", listName)
-// 		return false
-// 	}
-
-// 	indexToRemove := -1
-// 	for i, item := range listToRemoveFrom.Items {
-// 		if item.Id == tvShow.Id {
-// 			indexToRemove = i
-// 			break
-// 		}
-// 	}
-// 	if indexToRemove == -1 {
-// 		fmt.Println("ERROR: Cannot find item in list: ", tvShow)
-// 		return false
-// 	}
-// 	listToRemoveFrom.Items = append(
-// 		listToRemoveFrom.Items[:indexToRemove],
-// 		listToRemoveFrom.Items[indexToRemove+1:]...,
-// 	)
-
-// 	return true
-// }
-
-// func (ud *UserData) MoveTVShowToList(previousListName string, newListName string, tvShow TVShow) (success bool) {
-// 	removeSuccess, addSuccess := false, false
-
-// 	removeSuccess = ud.RemoveTVShowFromList(previousListName, tvShow)
-// 	if removeSuccess {
-// 		addSuccess = ud.AddTVShowToList(newListName, tvShow)
-// 	}
-
-// 	return removeSuccess && addSuccess
-// }
-
-// func (ud *UserData) AddMovieToList(listName string, movie Movie) (success bool) {
-// 	fmt.Println("Adding Movie to list")
-// 	fmt.Println("listName: ", listName, ", movie: ", movie)
-
-// 	var listToAddTo *MVWatchList = nil
-
-// 	for i, list := range ud.MVLists {
-// 		if list.Name == listName {
-// 			listToAddTo = &ud.MVLists[i]
-// 		}
-// 	}
-
-// 	if listToAddTo == nil {
-// 		fmt.Println("ERROR: List does not exist")
-// 		return false
-// 	}
-
-// 	alreadyExists := false
-
-// 	for _, item := range listToAddTo.Items {
-// 		if item.Id == movie.Id {
-// 			alreadyExists = true
-// 		}
-// 	}
-
-// 	if alreadyExists {
-// 		fmt.Println("ERROR: Show already exists in the list")
-// 		return false
-// 	}
-
-// 	listToAddTo.Items = append(listToAddTo.Items, movie)
-// 	return true
-// }
-
-// func (ud *UserData) RemoveMovieFromList(listName string, movie Movie) (success bool) {
-// 	fmt.Println("RemoveMovieFromList, listName: ", listName, " movie: ", movie)
-
-// 	var listToRemoveFrom *MVWatchList = nil
-// 	for i, list := range ud.MVLists {
-// 		if list.Name == listName {
-// 			listToRemoveFrom = &ud.MVLists[i]
-// 			break
-// 		}
-// 	}
-// 	if listToRemoveFrom == nil {
-// 		fmt.Println("ERROR: Cannot find list: ", listName)
-// 		return false
-// 	}
-
-// 	indexToRemove := -1
-// 	for i, item := range listToRemoveFrom.Items {
-// 		if item.Id == movie.Id {
-// 			indexToRemove = i
-// 			break
-// 		}
-// 	}
-// 	if indexToRemove == -1 {
-// 		fmt.Println("ERROR: Cannot find item in list: ", movie)
-// 		return false
-// 	}
-// 	listToRemoveFrom.Items = append(
-// 		listToRemoveFrom.Items[:indexToRemove],
-// 		listToRemoveFrom.Items[indexToRemove+1:]...,
-// 	)
-
-// 	return true
-// }
-
-// func (ud *UserData) MoveMovieToList(previousListName string, newListName string, movie Movie) (success bool) {
-// 	removeSuccess, addSuccess := false, false
-
-// 	removeSuccess = ud.RemoveMovieFromList(previousListName, movie)
-// 	if removeSuccess {
-// 		addSuccess = ud.AddMovieToList(newListName, movie)
-// 	}
-
-// 	return removeSuccess && addSuccess
-// }
