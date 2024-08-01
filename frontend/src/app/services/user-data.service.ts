@@ -12,6 +12,8 @@ import {
 	GetTVShowWatchStatus,
 	GetMoviesStatusLists,
 	GetTVShowsStatusLists,
+	GetCustomMoviesLists,
+	GetCustomTVShowsLists,
 } from '../../../wailsjs/go/main/UserData';
 import { BehaviorSubject } from 'rxjs';
 import { MVWatchStatus, TVWatchStatus } from '../tmdb.models';
@@ -71,6 +73,14 @@ export class UserDataService {
 
 	public async getTVShowsStatusLists() {
 		return await GetTVShowsStatusLists();
+	}
+
+	public async getCustomMoviesLists() {
+		return await GetCustomMoviesLists();
+	}
+
+	public async getCustomTVShowsLists() {
+		return await GetCustomTVShowsLists();
 	}
 
 	/** Fetches the latest user data from backend */

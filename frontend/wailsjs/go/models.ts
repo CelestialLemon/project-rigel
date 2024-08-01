@@ -5,6 +5,7 @@ export namespace main {
 	    name: string;
 	    poster_path: string;
 	    watch_status: string;
+	    lists: {[key: string]: boolean};
 	
 	    static createFrom(source: any = {}) {
 	        return new Movie(source);
@@ -16,6 +17,7 @@ export namespace main {
 	        this.name = source["name"];
 	        this.poster_path = source["poster_path"];
 	        this.watch_status = source["watch_status"];
+	        this.lists = source["lists"];
 	    }
 	}
 	export class MovieList {
@@ -55,6 +57,7 @@ export namespace main {
 	    name: string;
 	    poster_path: string;
 	    watch_status: string;
+	    lists: {[key: string]: boolean};
 	
 	    static createFrom(source: any = {}) {
 	        return new TVShow(source);
@@ -66,6 +69,7 @@ export namespace main {
 	        this.name = source["name"];
 	        this.poster_path = source["poster_path"];
 	        this.watch_status = source["watch_status"];
+	        this.lists = source["lists"];
 	    }
 	}
 	export class TVShowList {
