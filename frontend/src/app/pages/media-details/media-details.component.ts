@@ -91,7 +91,7 @@ export class MediaDetailsComponent {
 		this.userDataService.userData
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(() => {
-				this.userDataUpdate.set(this.userDataUpdate() + 1);
+				this.userDataUpdate.update(v => v + 1);
 			});
 		this.getMediaWatchStatus();
 	}
