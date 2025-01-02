@@ -20,4 +20,6 @@ export function GetTVShowsStatusLists():Promise<Array<main.TVShowList>>;
 
 export function UpdateMovieWatchStatus(arg1:main.Movie,arg2:string):Promise<void>;
 
+export function UpdateTVShowEpisodeWatchStatus(arg1:main.TVShow,arg2:number,arg3:number):Promise<void>;
+
 export function UpdateTVShowWatchStatus(arg1:main.TVShow,arg2:string):Promise<void>;

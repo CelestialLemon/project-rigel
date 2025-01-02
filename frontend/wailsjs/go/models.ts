@@ -1,23 +1,11 @@
 export namespace main {
 	
-	export class  {
-	
-	
-	    static createFrom(source: any = {}) {
-	        return new (source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	
-	    }
-	}
 	export class Movie {
 	    id: number;
 	    name: string;
 	    poster_path: string;
 	    watch_status: string;
-	    lists: {[key: string]: };
+	    lists: {[key: string]: boolean};
 	
 	    static createFrom(source: any = {}) {
 	        return new Movie(source);
@@ -29,26 +17,8 @@ export namespace main {
 	        this.name = source["name"];
 	        this.poster_path = source["poster_path"];
 	        this.watch_status = source["watch_status"];
-	        this.lists = this.convertValues(source["lists"], , true);
+	        this.lists = source["lists"];
 	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice && a.map) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
 	}
 	export class MovieList {
 	    name: string;
@@ -87,7 +57,8 @@ export namespace main {
 	    name: string;
 	    poster_path: string;
 	    watch_status: string;
-	    lists: {[key: string]: };
+	    lists: {[key: string]: boolean};
+	    watched_episodes: {[key: number]: number};
 	
 	    static createFrom(source: any = {}) {
 	        return new TVShow(source);
@@ -99,26 +70,9 @@ export namespace main {
 	        this.name = source["name"];
 	        this.poster_path = source["poster_path"];
 	        this.watch_status = source["watch_status"];
-	        this.lists = this.convertValues(source["lists"], , true);
+	        this.lists = source["lists"];
+	        this.watched_episodes = source["watched_episodes"];
 	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice && a.map) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
 	}
 	export class TVShowList {
 	    name: string;
@@ -155,8 +109,8 @@ export namespace main {
 	export class UserData {
 	    tv_shows: {[key: number]: TVShow};
 	    movies: {[key: number]: Movie};
-	    movies_lists: {[key: string]: };
-	    tv_shows_lists: {[key: string]: };
+	    movies_lists: {[key: string]: boolean};
+	    tv_shows_lists: {[key: string]: boolean};
 	
 	    static createFrom(source: any = {}) {
 	        return new UserData(source);
@@ -166,8 +120,8 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.tv_shows = this.convertValues(source["tv_shows"], TVShow, true);
 	        this.movies = this.convertValues(source["movies"], Movie, true);
-	        this.movies_lists = this.convertValues(source["movies_lists"], , true);
-	        this.tv_shows_lists = this.convertValues(source["tv_shows_lists"], , true);
+	        this.movies_lists = source["movies_lists"];
+	        this.tv_shows_lists = source["tv_shows_lists"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

@@ -39,7 +39,7 @@ type Movie struct {
 	WatchStatus string `json:"watch_status"`
 	// name of custom lists the item is part of
 	// using a map with empty value to use as a set
-	Lists map[string]struct{} `json:"lists"`
+	Lists map[string]bool `json:"lists"`
 }
 
 type MovieList struct {
@@ -69,7 +69,7 @@ func (m *Movie) addList(listName string) {
 	if exists {
 		fmt.Println("List already exists for movie: ", m)
 	} else {
-		m.Lists[listName] = struct{}{}
+		m.Lists[listName] = true
 	}
 }
 
@@ -79,7 +79,11 @@ type TVShow struct {
 	PosterPath  string `json:"poster_path"`
 	WatchStatus string `json:"watch_status"`
 	// name of custom lists the item is part of
-	Lists map[string]struct{} `json:"lists"`
+	Lists map[string]bool `json:"lists"`
+	// contains all the watched episodes for this TVShow
+	// the key of the map is the season number
+	// and the value is the number of episodes watched in the season
+	WatchedEpisodes map[uint]uint `json:"watched_episodes"`
 }
 
 type TVShowList struct {
@@ -109,16 +113,20 @@ func (t *TVShow) addList(listName string) {
 	if exists {
 		fmt.Println("List already exists for movie: ", t)
 	} else {
-		t.Lists[listName] = struct{}{}
+		t.Lists[listName] = true
 	}
+}
+
+func (t *TVShow) updateEpisodeWatchStatus(season uint, episode uint) {
+	t.WatchedEpisodes[season] = episode
 }
 
 type UserData struct {
 	TVShows map[uint]TVShow `json:"tv_shows"`
 	Movies  map[uint]Movie  `json:"movies"`
 	// custom lists created by user
-	MoviesLists  map[string]struct{} `json:"movies_lists"`
-	TVShowsLists map[string]struct{} `json:"tv_shows_lists"`
+	MoviesLists  map[string]bool `json:"movies_lists"`
+	TVShowsLists map[string]bool `json:"tv_shows_lists"`
 }
 
 func (ud *UserData) UpdateMovieWatchStatus(movie Movie, newWatchStatus string) {
@@ -159,13 +167,13 @@ func (ud *UserData) GetTVShowWatchStatus(tvShowId uint) string {
 
 func (ud *UserData) AddMovieToList(movie Movie, listName string) {
 	movie.addList(listName)
-	ud.MoviesLists[listName] = struct{}{}
+	ud.MoviesLists[listName] = true
 	WriteUserData(*ud)
 }
 
 func (ud *UserData) AddTVShowToList(tvShow TVShow, listName string) {
 	tvShow.addList(listName)
-	ud.TVShowsLists[listName] = struct{}{}
+	ud.TVShowsLists[listName] = true
 	WriteUserData(*ud)
 }
 
@@ -251,3 +259,13 @@ func (ud *UserData) GetCustomTVShowsLists() []TVShowList {
 	return lists
 }
 
+func (ud *UserData) UpdateTVShowEpisodeWatchStatus(tvShow TVShow, season uint, episode uint) {
+	if t, exists := ud.TVShows[tvShow.Id]; exists {
+		t.updateEpisodeWatchStatus(season, episode)
+		WriteUserData(*ud)
+	} else {
+		fmt.Println("Given show does not exist in user data")
+		tvShow.updateEpisodeWatchStatus(season, episode)
+		ud.TVShows[tvShow.Id] = tvShow
+	}
+}

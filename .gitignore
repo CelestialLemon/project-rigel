@@ -2,5 +2,6 @@ build/bin
 node_modules
 frontend/dist
 frontend/src/app/constants.ts
+frontend/node_modules/*
 api-test.http
 rigel-data.json

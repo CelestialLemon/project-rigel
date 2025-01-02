@@ -14,6 +14,7 @@ import {
 	GetTVShowsStatusLists,
 	GetCustomMoviesLists,
 	GetCustomTVShowsLists,
+	UpdateTVShowEpisodeWatchStatus
 } from '../../../wailsjs/go/main/UserData';
 import { BehaviorSubject } from 'rxjs';
 import { MVWatchStatus, TVWatchStatus } from '../tmdb.models';
@@ -83,6 +84,15 @@ export class UserDataService {
 		return await GetCustomTVShowsLists();
 	}
 
+	public getWatchedEpisodesData(showId: number): { [key: number]: number } {
+		return this.userData.getValue().tv_shows[showId]?.watched_episodes ?? {};
+	}
+
+
+	public async setEpisodeWatchStatus(tvShow: main.TVShow, season: number, episode: number) {
+		await UpdateTVShowEpisodeWatchStatus(tvShow, season, episode);
+		await this.getUserDataFromBackend();
+	}
 	/** Fetches the latest user data from backend */
 	private async getUserDataFromBackend() {
 		const res = await GetUserData();

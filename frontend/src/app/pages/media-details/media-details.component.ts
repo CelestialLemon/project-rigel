@@ -24,6 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
@@ -48,6 +49,7 @@ import { Subject, takeUntil } from 'rxjs';
 		MatListModule,
 		MatFormFieldModule,
 		MatSelectModule,
+		MatTooltipModule
 	],
 	providers: [TmdbService],
 	templateUrl: './media-details.component.html',
@@ -60,6 +62,9 @@ export class MediaDetailsComponent {
 	protected watchStatus = signal<MVWatchStatus | TVWatchStatus>(
 		TVWatchStatus.UNWATCHED
 	);
+
+	// object containing watched episode data for current show
+	protected watchedEpisodesData: { [key: number]: number } = {};
 
 	protected mediaTVDetails: MediaTVDetailsResponse | null = null;
 	protected activeSeasonDetails: MediaTVSeasonResponse | null = null;
@@ -79,7 +84,7 @@ export class MediaDetailsComponent {
 		private route: ActivatedRoute,
 		private tmdbService: TmdbService,
 		private sanitizer: DomSanitizer
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.route.queryParamMap
@@ -93,7 +98,6 @@ export class MediaDetailsComponent {
 			.subscribe(() => {
 				this.userDataUpdate.update(v => v + 1);
 			});
-		this.getMediaWatchStatus();
 	}
 
 	ngOnDestroy() {
@@ -150,7 +154,12 @@ export class MediaDetailsComponent {
 				mediaType
 			);
 		}
+		// update the watch status by fetching from service
+		this.getMediaWatchStatus();
+		// get watched episodes data
+		this.watchedEpisodesData = this.userDataService.getWatchedEpisodesData(this.mediaId());
 	}
+
 
 	private async getMediaWatchStatus() {
 		let watchStatus: TVWatchStatus | MVWatchStatus =
@@ -179,6 +188,7 @@ export class MediaDetailsComponent {
 				mediaId,
 				newActiveSeason
 			);
+		console.log("active season details: ", this.activeSeasonDetails);
 	}
 
 	/** Handles updates of watch status by user */
@@ -319,6 +329,43 @@ export class MediaDetailsComponent {
 		return this.sanitizer.bypassSecurityTrustResourceUrl(inputUrl);
 	}
 
+	protected getIsEpisodeWatched(season: number, episode: number): boolean {
+		const episoesWatchedInCurrentSeason = this.watchedEpisodesData[season] ?? 0;
+		return episoesWatchedInCurrentSeason >= episode;
+	}
+
+	protected onClickEpisodeWatchStatus(season: number, episode: number) {
+		if (this.mediaTVDetails == null) return;
+		// check if the episode is watched
+		const isWatched = this.getIsEpisodeWatched(season, episode);
+		// create tv show object to pass to service
+		const tvShow: main.TVShow = {
+			id: this.mediaId(),
+			name: this.mediaTVDetails.name,
+			poster_path: this.mediaTVDetails.poster_path,
+			watch_status: this.watchStatus(),
+			lists: {},
+			watched_episodes: this.watchedEpisodesData
+		}
+		// if episode is watched we want to set is as UNWATCHED
+		// so we'll set the watched epidoes till the episode before current
+		if (isWatched) {
+			this.userDataService.setEpisodeWatchStatus(tvShow, season, episode - 1);
+			this.watchedEpisodesData[season] = episode - 1;
+		}
+		// if the episode is unwatched we set the watched episodes till this one
+		else {
+			// if episode is not watched and current watch status for the show is unwatched
+			// change it to watching
+			if (tvShow.watch_status === TVWatchStatus.UNWATCHED) {
+				tvShow.watch_status = TVWatchStatus.WATCHING;
+				this.watchStatus.set(TVWatchStatus.WATCHING);
+			}
+			this.userDataService.setEpisodeWatchStatus(tvShow, season, episode);
+			this.watchedEpisodesData[season] = episode;
+		}
+
+	}
 	// -------------------------------------------------------------------------
 	// component functions
 

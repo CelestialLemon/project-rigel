@@ -38,6 +38,10 @@ export function UpdateMovieWatchStatus(arg1, arg2) {
   return window['go']['main']['UserData']['UpdateMovieWatchStatus'](arg1, arg2);
 }
 
+export function UpdateTVShowEpisodeWatchStatus(arg1, arg2, arg3) {
+  return window['go']['main']['UserData']['UpdateTVShowEpisodeWatchStatus'](arg1, arg2, arg3);
+}
+
 export function UpdateTVShowWatchStatus(arg1, arg2) {
   return window['go']['main']['UserData']['UpdateTVShowWatchStatus'](arg1, arg2);
 }
